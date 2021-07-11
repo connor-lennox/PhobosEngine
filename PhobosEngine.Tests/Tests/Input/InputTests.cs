@@ -18,10 +18,6 @@ namespace PhobosEngine.Tests.Input
         public void SetUp()
         {
             signal = new TestingControlSignal();
-
-            // testAxisControl = new AxisControl(signal);
-            // testTwoAxisControl = new TwoAxisControl(signal, signal);
-
         }
 
         [Test]
