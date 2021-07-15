@@ -97,5 +97,13 @@ namespace PhobosEngine.Tests.Core
             }
             Assert.AreEqual(gameEntity.GetComponents<DummyComponent>().Length, amount);
         }
+
+        [Test]
+        public void RemoveComponent_RemoveTransform_ThrowsException()
+        {
+            Assert.Throws<InvalidOperationException>(
+                () => { gameEntity.RemoveComponent(gameEntity.GetComponent<Transform>()); }
+            );
+        }
     }
 }

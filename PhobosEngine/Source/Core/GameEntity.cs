@@ -65,7 +65,11 @@ namespace PhobosEngine
         {
             if(comp.Entity != this)
             {
-                throw  new InvalidOperationException("A Component cannot be removed from an Entity that is not its owner.");
+                throw new InvalidOperationException("A Component cannot be removed from an Entity that is not its owner.");
+            }
+
+            if(comp.GetType() == typeof(Transform)) {
+                throw new InvalidOperationException("Transforms cannot be removed!");
             }
             comp.Entity = null;
             components.Remove(comp);
