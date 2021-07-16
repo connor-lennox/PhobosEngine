@@ -43,6 +43,14 @@ namespace PhobosEngine.Tests.Core
         }
 
         [Test]
+        public void RemoveComponent_Generic()
+        {
+            gameEntity.AddComponent(component);
+            Assert.True(gameEntity.RemoveComponent<DummyComponent>());
+            Assert.Null(component.Entity);
+        }
+
+        [Test]
         public void RemoveComponent_NotOwned_ThrowsException()
         {
             Assert.Throws<InvalidOperationException>(
@@ -96,14 +104,6 @@ namespace PhobosEngine.Tests.Core
                 gameEntity.AddComponent(new DummyComponent());
             }
             Assert.AreEqual(gameEntity.GetComponents<DummyComponent>().Length, amount);
-        }
-
-        [Test]
-        public void RemoveComponent_RemoveTransform_ThrowsException()
-        {
-            Assert.Throws<InvalidOperationException>(
-                () => { gameEntity.RemoveComponent(gameEntity.GetComponent<Transform>()); }
-            );
         }
     }
 }

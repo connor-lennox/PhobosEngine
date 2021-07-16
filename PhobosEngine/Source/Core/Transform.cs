@@ -5,7 +5,7 @@ using PhobosEngine.Serialization;
 
 namespace PhobosEngine
 {
-    public class Transform : Component
+    public class Transform : ISerializable
     {
         public Vector2 position;
         // Rotation is in degrees
@@ -38,17 +38,15 @@ namespace PhobosEngine
             rotation = PBMath.Rad2Deg(MathF.Atan2(target.Y - position.Y, target.X - position.X));
         }
 
-        public override void Serialize(ISerializationWriter writer)
+        public void Serialize(ISerializationWriter writer)
         {
-            base.Serialize(writer);
             writer.Write(position);
             writer.Write(rotation);
             writer.Write(scale);
         }
 
-        public override void Deserialize(ISerializationReader reader)
+        public void Deserialize(ISerializationReader reader)
         {
-            base.Deserialize(reader);
             position = reader.ReadVector2();
             rotation = reader.ReadFloat();
             scale = reader.ReadVector2();
