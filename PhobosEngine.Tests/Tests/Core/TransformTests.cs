@@ -8,12 +8,14 @@ namespace PhobosEngine.Tests.Core
     [TestFixture]
     public class TransformTests
     {
+        private GameEntity entity;
         private Transform transform;
 
         [SetUp]
         public void Setup()
         {
-            transform = new Transform();
+            entity = new GameEntity();
+            transform = entity.Transform;
         }
     
         [Test]

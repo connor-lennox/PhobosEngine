@@ -7,17 +7,42 @@ namespace PhobosEngine
 {
     public class Transform : ISerializable
     {
-        public Vector2 Position {get; set;}
+        private Vector2 position;
+        public Vector2 Position {
+            get => position; 
+            set {
+                position = value;
+                entity.TransformModified();
+            }
+        }
         // Rotation is in degrees
-        public float Rotation {get; set;}
-        public Vector2 Scale {get; set;}
+        private float rotation;
+        public float Rotation {
+            get => rotation; 
+            set {
+                rotation = value;
+                entity.TransformModified();
+            }
+        }
 
-        public Transform() : this(Vector2.Zero) {}
-        public Transform(Vector2 position) : this(position, 0) {}
-        public Transform(Vector2 position, float rotation) : this(position, rotation, Vector2.One) {}
+        private Vector2 scale;
+        public Vector2 Scale {
+            get => scale; 
+            set {
+                scale = value;
+                entity.TransformModified();
+            }
+        }
 
-        public Transform(Vector2 position, float rotation, Vector2 scale)
+        private GameEntity entity;
+
+        public Transform(GameEntity entity) : this(entity, Vector2.Zero) {}
+        public Transform(GameEntity entity, Vector2 position) : this(entity, position, 0) {}
+        public Transform(GameEntity entity, Vector2 position, float rotation) : this(entity, position, rotation, Vector2.One) {}
+
+        public Transform(GameEntity entity, Vector2 position, float rotation, Vector2 scale)
         {
+            this.entity = entity;
             this.Position = position;
             this.Rotation = rotation;
             this.Scale = scale;

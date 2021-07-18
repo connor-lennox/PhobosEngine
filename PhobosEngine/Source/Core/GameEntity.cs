@@ -18,7 +18,7 @@ namespace PhobosEngine
 
         public GameEntity()
         {
-            Transform = new Transform();
+            Transform = new Transform(this);
             Id = _nextId++;     
         }
 
@@ -103,6 +103,14 @@ namespace PhobosEngine
         public void ClearComponents()
         {
             components.Clear();
+        }
+
+        public void TransformModified()
+        {
+            foreach(Component component in components)
+            {
+                component.OnParentTransformModified();
+            }
         }
 
         public void Serialize(ISerializationWriter writer)
