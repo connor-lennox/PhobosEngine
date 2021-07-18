@@ -54,7 +54,7 @@ namespace PhobosEngine.Tests.Serialization
         {
             GameEntity oldEntity = new GameEntity();
             Vector2 pos = new Vector2(4, 5);
-            oldEntity.Transform.position = pos;
+            oldEntity.Transform.Position = pos;
 
             TextSerializationWriter writer = new TextSerializationWriter(stream);
             writer.Write(oldEntity);
@@ -65,7 +65,7 @@ namespace PhobosEngine.Tests.Serialization
             GameEntity newEntity = new GameEntity();
             newEntity.Deserialize(reader);
 
-            Assert.AreEqual(newEntity.Transform.position, pos);
+            Assert.AreEqual(newEntity.Transform.Position, pos);
         }
     }
 }

@@ -64,7 +64,7 @@ namespace PhobosEngine
             // TODO: Add your update logic here
             testScene.Update();
             int dir = gameTime.TotalGameTime.Seconds % 2 == 0 ? 1 : -1;
-            testTransform.position += Vector2.UnitX * ((float)gameTime.ElapsedGameTime.TotalSeconds) * 40 * dir;
+            testTransform.Position += Vector2.UnitX * ((float)gameTime.ElapsedGameTime.TotalSeconds) * 40 * dir;
 
             base.Update(gameTime);
         }
