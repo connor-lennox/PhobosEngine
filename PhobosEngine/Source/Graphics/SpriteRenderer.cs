@@ -8,7 +8,7 @@ namespace PhobosEngine.Graphics
     {
         public Texture2D sprite;
         public Vector2 SpriteOrigin { get {
-            return Transform.position - new Vector2(sprite.Width * 0.5f, sprite.Height * 0.5f);
+            return Transform.Position - new Vector2(sprite.Width * 0.5f, sprite.Height * 0.5f);
         }}
 
         public void Draw(SpriteBatch batch)

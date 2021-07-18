@@ -14,6 +14,8 @@ namespace PhobosEngine
 
         public virtual void Update() {}
 
+        public virtual void OnParentTransformModified() {}
+
         public virtual void Serialize(ISerializationWriter writer)
         {
             // Need to first serialize the real type of this Component

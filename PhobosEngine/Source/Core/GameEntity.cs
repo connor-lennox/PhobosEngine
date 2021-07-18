@@ -7,14 +7,14 @@ namespace PhobosEngine
 {
     public class GameEntity : ISerializable
     {
-        private static uint _nextId = 0;
+        private static int _nextId = 0;
 
         public bool Active {get; set;} = true;
 
         public Transform Transform { get; private set; }
         private List<Component> components = new List<Component>();
 
-        public uint Id { get; private set; }
+        public int Id { get; private set; }
 
         public GameEntity()
         {
@@ -107,6 +107,7 @@ namespace PhobosEngine
 
         public void Serialize(ISerializationWriter writer)
         {
+            writer.Write(Id);
             Transform.Serialize(writer);
             writer.Write(components.Count);
             foreach(Component c in components)
@@ -117,6 +118,7 @@ namespace PhobosEngine
 
         public void Deserialize(ISerializationReader reader)
         {
+            Id = reader.ReadInt();
             Transform.Deserialize(reader);
             ClearComponents();
             int numComponents = reader.ReadInt();

@@ -8,9 +8,16 @@ namespace PhobosEngine.Graphics
         public float Zoom {get; set;} = 1f;
         public Rectangle Bounds {get; set;} = new Rectangle(0, 0, 640, 480);
 
-        public Matrix GetRenderMatrix()
+        public Matrix RenderMatrix {get; private set;}
+
+        public override void OnParentTransformModified()
         {
-            return Matrix.CreateTranslation(new Vector3(-Transform.position, 0)) *
+            UpdateRenderMatrix();
+        }
+
+        private void UpdateRenderMatrix()
+        {
+            RenderMatrix = Matrix.CreateTranslation(new Vector3(-Transform.Position, 0)) *
                     Matrix.CreateScale(Zoom) *
                     Matrix.CreateTranslation(new Vector3(Bounds.Width * 0.5f, Bounds.Height * 0.5f, 0));
         }
@@ -30,6 +37,7 @@ namespace PhobosEngine.Graphics
             base.Deserialize(reader);
             Zoom = reader.ReadFloat();
             Bounds = new Rectangle(reader.ReadInt(), reader.ReadInt(), reader.ReadInt(), reader.ReadInt());
+            UpdateRenderMatrix();
         }
     }
 }
