@@ -9,6 +9,13 @@ namespace PhobosEngine.Physics
         // Values are relative to the Collider offset, which is the centerpoint of the box.
         public Vector2 Size {get; private set;}
 
+        protected override void RecalculateBounds()
+        {
+            // Centerpoint at Worldpos
+            // Need to consider the rotation of the box as well (Transform.Rotation)
+            throw new System.NotImplementedException("implement BoxCollider.RecalculateBounds()!!");
+        }
+
         public override void Serialize(ISerializationWriter writer)
         {
             base.Serialize(writer);

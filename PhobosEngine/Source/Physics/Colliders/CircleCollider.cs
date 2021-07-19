@@ -1,4 +1,6 @@
+using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
+using PhobosEngine.Math;
 
 namespace PhobosEngine.Physics
 {
@@ -6,6 +8,11 @@ namespace PhobosEngine.Physics
     {
         // Radius of the circle, centered on the Collider offset.
         public float Radius {get; private set;}
+
+        protected override void RecalculateBounds()
+        {
+            Bounds = new RectangleF(WorldPos - new Vector2(Radius, Radius), new Vector2(Radius, Radius));
+        }
 
         public override void Serialize(ISerializationWriter writer)
         {

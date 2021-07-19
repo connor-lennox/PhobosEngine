@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
-using PhobosEngine.Util;
+using PhobosEngine.Math;
 
 namespace PhobosEngine.Physics
 {

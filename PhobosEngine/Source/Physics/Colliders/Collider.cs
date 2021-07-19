@@ -1,10 +1,10 @@
 using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
-using PhobosEngine.Util;
+using PhobosEngine.Math;
 
 namespace PhobosEngine.Physics
 {
-    public class Collider : Component
+    public abstract class Collider : Component
     {
         public event CollisionEventHandler OnCollisionEnter;
         public event CollisionEventHandler OnCollisionExit;
@@ -13,6 +13,13 @@ namespace PhobosEngine.Physics
 
         public Vector2 Offset {get; protected set;}
         public Vector2 WorldPos => Entity.Transform.Position + Offset;
+
+        protected abstract void RecalculateBounds();
+        
+        public override void OnParentTransformModified()
+        {
+            RecalculateBounds();
+        }
 
         public override void Serialize(ISerializationWriter writer)
         {
