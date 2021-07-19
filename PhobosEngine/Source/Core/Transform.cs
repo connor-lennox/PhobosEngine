@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 using PhobosEngine.Serialization;
+using PhobosEngine.Math;
 
 namespace PhobosEngine
 {
@@ -9,31 +11,116 @@ namespace PhobosEngine
     {
         private Vector2 position;
         public Vector2 Position {
-            get => position; 
-            set {
-                position = value;
-                entity.TransformModified();
+            get {
+                UpdateTransform();
+                return position;
             }
+            set => SetPosition(value);
         }
-        // Rotation is in degrees
+
+        // Rotation is in radians
         private float rotation;
         public float Rotation {
-            get => rotation; 
-            set {
-                rotation = value;
-                entity.TransformModified();
+            get {
+                UpdateTransform();
+                return rotation;
             }
+            set => SetRotation(value);
+        }
+
+        public float RotationDegrees {
+            get => PBMath.Rad2Deg(Rotation);
+            set => Rotation = PBMath.Deg2Rad(value);
         }
 
         private Vector2 scale;
         public Vector2 Scale {
-            get => scale; 
+            get {
+                UpdateTransform();
+                return scale;
+            }
+            set => SetScale(value);
+        }
+
+        private Vector2 localPosition;
+        public Vector2 LocalPosition {
+            get {
+                UpdateTransform();
+                return localPosition;
+            }
             set {
-                scale = value;
+                localPosition = value;
+                positionDirty = transformDirty = true;
                 entity.TransformModified();
             }
         }
 
+        private float localRotation;
+        public float LocalRotation {
+            get {
+                UpdateTransform();
+                return localRotation;
+            }
+            set {
+                localRotation = value;
+                rotationDirty = transformDirty = true;
+                entity.TransformModified();
+            }
+        }
+
+        private Vector2 localScale;
+        public Vector2 LocalScale {
+            get {
+                UpdateTransform();
+                return localScale;
+            }
+            set {
+                localScale = value;
+                scaleDirty = transformDirty = true;
+                entity.TransformModified();
+            }
+        }
+
+        // Dirty flags determine when to recalculate transformation matrices
+        private bool transformDirty;
+        private bool positionDirty;
+        private bool rotationDirty;
+        private bool scaleDirty;
+        private bool inverseWorldDirty;
+
+        // World and Local transformation matrices
+        private Matrix2D worldTransform;
+        private Matrix2D localTransform;
+        private Matrix2D inverseWorldTransform;
+
+        // Matrices representing the local position, rotation, and scale transformations
+        private Matrix2D positionMatrix;
+        private Matrix2D rotationMatrix;
+        private Matrix2D scaleMatrix;
+
+        // Parent Transform
+        private Transform parent;
+        public Transform Parent {
+            get => parent;
+            set {
+                if(parent != null)
+                {
+                    parent.children.Remove(this);
+                }
+                parent = value;
+                parent.children.Add(this);
+                transformDirty = true;
+            }
+        }
+
+        // List of children Transforms. These need to be notified when we become dirty
+        // TODO: Figure out how to serialize these references
+        private List<Transform> children = new List<Transform>();
+        public List<Transform> Children {
+            get; private set;
+        }
+
+        // GameEntity that owns this Transform
         private GameEntity entity;
 
         public Transform(GameEntity entity) : this(entity, Vector2.Zero) {}
@@ -49,32 +136,141 @@ namespace PhobosEngine
         }
 
         public Vector2 Right { get {
-            float rads = PBMath.Deg2Rad(Rotation);
+            float rads = Rotation;
             return new Vector2(MathF.Cos(rads), MathF.Sin(rads));
         }}
 
         public Vector2 Up { get {
-            float rads = PBMath.Deg2Rad(Rotation + 90);
+            float rads = Rotation + (MathF.PI / 2);
             return new Vector2(MathF.Cos(rads), MathF.Sin(rads));
         }}
 
+        public Transform SetPosition(Vector2 position)
+        {
+            if(Parent != null)
+            {
+                Parent.UpdateInverseWorld();
+                PBMath.Transform(ref position, ref Parent.inverseWorldTransform, out localPosition);
+            } else {
+                localPosition = position;
+            }
+            positionDirty = true;
+            SetDirty();
+            entity.TransformModified();
+            return this;
+        }
+
+        public Transform SetRotation(float rotation)
+        {
+            if(Parent != null)
+            {
+                localRotation = rotation - Parent.rotation;
+            } else {
+                localRotation = rotation;
+            }
+            rotationDirty = true;
+            SetDirty();
+            entity.TransformModified();
+            return this;
+        }
+
+        public Transform SetScale(Vector2 scale)
+        {
+            if(Parent != null)
+            {
+                localScale = scale / Parent.scale;
+            } else {
+                localScale = scale;
+            }
+            scaleDirty = true;
+            SetDirty();
+            entity.TransformModified();
+            return this;
+        }
+
+        private void SetDirty()
+        {
+            transformDirty = true;
+            foreach(Transform child in children)
+            {
+                child.SetDirty();
+            }
+        }
+
+        private void UpdateTransform()
+        {
+            if (transformDirty)
+            {
+                if(Parent != null)
+                {
+                    Parent.UpdateTransform();
+                }
+
+                if(positionDirty)
+                {
+                    Matrix2D.CreateTranslation(localPosition, out positionMatrix);
+                    positionDirty = false;
+                }
+
+                if(rotationDirty)
+                {
+                    Matrix2D.CreateRotation(localRotation, out rotationMatrix);
+                    rotationDirty = false;
+                }
+
+                if(scaleDirty)
+                {
+                    Matrix2D.CreateScale(localScale, out scaleMatrix);
+                }
+
+                Matrix2D.Multiply(ref scaleMatrix, ref rotationMatrix, out localTransform);
+                Matrix2D.Multiply(ref localTransform, ref positionMatrix, out localTransform);
+
+                if(Parent == null)
+                {
+                    worldTransform = localTransform;
+                    position = localPosition;
+                    rotation = localRotation;
+                    scale = localScale;
+                } else {
+                    Matrix2D.Multiply(ref localTransform, ref Parent.worldTransform, out worldTransform);
+                    PBMath.Transform(ref localPosition, ref Parent.worldTransform, out position);
+                    rotation = localRotation + Parent.rotation;
+                    scale = localScale * Parent.scale;
+                }
+
+                inverseWorldDirty = true;
+            }
+        }
+
+        private void UpdateInverseWorld()
+        {
+            UpdateTransform();
+            if(inverseWorldDirty)
+            {
+                Matrix2D.Invert(ref worldTransform, out inverseWorldTransform);
+            }
+        }
+
         public void PointTowards(Vector2 target)
         {
-            Rotation = PBMath.Rad2Deg(MathF.Atan2(target.Y - Position.Y, target.X - Position.X));
+            Rotation = MathF.Atan2(target.Y - Position.Y, target.X - Position.X);
         }
 
         public void Serialize(ISerializationWriter writer)
         {
-            writer.Write(Position);
-            writer.Write(Rotation);
-            writer.Write(Scale);
+            writer.Write(LocalPosition);
+            writer.Write(LocalRotation);
+            writer.Write(LocalScale);
         }
 
         public void Deserialize(ISerializationReader reader)
         {
-            Position = reader.ReadVector2();
-            Rotation = reader.ReadFloat();
-            Scale = reader.ReadVector2();
+            LocalPosition = reader.ReadVector2();
+            LocalRotation = reader.ReadFloat();
+            LocalScale = reader.ReadVector2();
+
+            transformDirty = positionDirty = rotationDirty = scaleDirty = true;
         }
     }
 }
