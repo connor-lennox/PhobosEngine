@@ -1,9 +1,11 @@
 using Microsoft.Xna.Framework;
 
-namespace PhobosEngine.Util
+namespace PhobosEngine.Math
 {
     public struct RectangleF
     {
+        // (X , Y) is the top left corner
+        // (X + Width, Y + Height) is the bottom right corner
         public float X;
         public float Y;
 
