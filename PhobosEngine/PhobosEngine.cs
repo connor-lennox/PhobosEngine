@@ -25,9 +25,6 @@ namespace PhobosEngine
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
-
             base.Initialize();
         }
 
@@ -53,7 +50,6 @@ namespace PhobosEngine
             testScene.AddEntity(testEntity);
             testScene.AddEntity(camEntity);
             testScene.MainCamera = camEntity.GetComponent<Camera>();
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -61,10 +57,10 @@ namespace PhobosEngine
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
             testScene.Update();
-            int dir = gameTime.TotalGameTime.Seconds % 2 == 0 ? 1 : -1;
-            testTransform.Position += Vector2.UnitX * ((float)gameTime.ElapsedGameTime.TotalSeconds) * 40 * dir;
+            float x = MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds);
+            float y = MathF.Sin((float)gameTime.TotalGameTime.TotalSeconds);
+            testTransform.Position = new Vector2(x, y) * 100;
 
             base.Update(gameTime);
         }
@@ -73,7 +69,6 @@ namespace PhobosEngine
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
             testScene.Draw(_spriteBatch);
 
             base.Draw(gameTime);
