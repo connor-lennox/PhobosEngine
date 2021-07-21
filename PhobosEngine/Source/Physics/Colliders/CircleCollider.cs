@@ -7,11 +7,24 @@ namespace PhobosEngine.Physics
     public class CircleCollider : Collider
     {
         // Radius of the circle, centered on the Collider offset.
-        public float Radius {get; private set;}
+        private float radius;
+        public float Radius {
+            get => radius; 
+            set {
+                radius = value;
+                RecalculateBounds();
+            }
+        }
+
+        private float effectiveRadius;
+        public float EffectiveRadius {
+            get => effectiveRadius;
+        }
 
         protected override void RecalculateBounds()
         {
-            Bounds = new RectangleF(WorldPos - new Vector2(Radius, Radius), new Vector2(Radius, Radius));
+            effectiveRadius = Radius * Transform.Scale.X;
+            Bounds = new RectangleF(WorldPos - new Vector2(EffectiveRadius, EffectiveRadius), new Vector2(EffectiveRadius*2, EffectiveRadius*2));
         }
 
         public override void Serialize(ISerializationWriter writer)

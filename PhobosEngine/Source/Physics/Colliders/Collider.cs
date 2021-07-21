@@ -14,6 +14,11 @@ namespace PhobosEngine.Physics
         public Vector2 Offset {get; protected set;}
         public Vector2 WorldPos => Entity.Transform.Position + Offset;
 
+        public override void Init()
+        {
+            RecalculateBounds();
+        }
+
         protected abstract void RecalculateBounds();
         
         public override void OnParentTransformModified()
