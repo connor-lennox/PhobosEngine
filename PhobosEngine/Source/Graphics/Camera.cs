@@ -10,6 +10,11 @@ namespace PhobosEngine.Graphics
 
         public Matrix RenderMatrix {get; private set;}
 
+        public override void Init()
+        {
+            UpdateRenderMatrix();
+        }
+
         public override void OnParentTransformModified()
         {
             UpdateRenderMatrix();
