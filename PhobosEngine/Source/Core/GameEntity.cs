@@ -38,6 +38,7 @@ namespace PhobosEngine
             }
             components.Add(comp);
             comp.Entity = this;
+            comp.Init();
 
             return comp;
         }

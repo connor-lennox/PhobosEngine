@@ -12,6 +12,8 @@ namespace PhobosEngine
 
         public Transform Transform {get=>Entity.Transform;}
 
+        public virtual void Init() {}
+
         public virtual void Update() {}
 
         public virtual void OnParentTransformModified() {}
