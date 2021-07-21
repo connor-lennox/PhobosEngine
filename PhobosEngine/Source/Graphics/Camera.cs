@@ -5,8 +5,23 @@ namespace PhobosEngine.Graphics
 {
     public class Camera : Component
     {
-        public float Zoom {get; set;} = 1f;
-        public Rectangle Bounds {get; set;} = new Rectangle(0, 0, 640, 480);
+        private float zoom = 1f;
+        public float Zoom {
+            get => zoom;
+            set {
+                zoom = value;
+                UpdateRenderMatrix();
+            }
+        }
+        
+        private Rectangle bounds = new Rectangle(0, 0, 640, 480);
+        public Rectangle Bounds {
+            get => bounds; 
+            set {
+                bounds = value;
+                UpdateRenderMatrix();
+            }
+        }
 
         public Matrix RenderMatrix {get; private set;}
 
