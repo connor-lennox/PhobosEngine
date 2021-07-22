@@ -90,8 +90,11 @@ namespace PhobosEngine
 
         // World and Local transformation matrices
         private Matrix2D worldTransform;
+        public Matrix2D WorldTransform {get=>worldTransform;}
         private Matrix2D localTransform;
+        public Matrix2D LocalTransform {get=>localTransform;}
         private Matrix2D inverseWorldTransform;
+        public Matrix2D InverseWorldTransform {get=>InverseWorldTransform;}
 
         // Matrices representing the local position, rotation, and scale transformations
         private Matrix2D positionMatrix;
