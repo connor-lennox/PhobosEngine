@@ -17,6 +17,11 @@ namespace PhobosEngine
 
         private Vector2[] effectivePoints;
 
+        public PolygonCollider() : base()
+        {
+            
+        }
+
         private void CalculateEffectivePoints()
         {
             effectivePoints = new Vector2[points.Length];

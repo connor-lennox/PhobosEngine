@@ -14,6 +14,11 @@ namespace PhobosEngine
         public Vector2 Offset {get; protected set;}
         public Vector2 WorldPos => Entity.Transform.Position + Offset;
 
+        public Collider()
+        {
+            Offset = Vector2.Zero;
+        }
+
         public override void Init()
         {
             RecalculateBounds();

@@ -21,6 +21,11 @@ namespace PhobosEngine
             get => effectiveRadius;
         }
 
+        public CircleCollider() : base()
+        {
+            radius = 1;
+        }
+
         protected override void RecalculateBounds()
         {
             effectiveRadius = Radius * Transform.Scale.X;

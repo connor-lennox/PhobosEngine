@@ -34,6 +34,11 @@ namespace PhobosEngine
             }
         }
 
+        public BoxCollider() : base()
+        {
+            size = new Vector2(1, 1);
+        }
+
         protected override void RecalculateBounds()
         {
             Vector2 topLeft = Offset - (size / 2);
