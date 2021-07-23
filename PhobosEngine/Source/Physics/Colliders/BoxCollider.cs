@@ -3,17 +3,43 @@ using PhobosEngine.Serialization;
 
 namespace PhobosEngine.Physics
 {
-    public class BoxCollider : Collider
+    public class BoxCollider : PolygonCollider
     {
         // Size represents the width and height of the collider.
         // Values are relative to the Collider offset, which is the centerpoint of the box.
-        public Vector2 Size {get; private set;}
+        private Vector2 size;
+        public Vector2 Size {
+            get => size;
+            set {
+                size = value;
+                RecalculateBounds();
+            }
+        }
+
+        public float Width
+        {
+            get => size.X;
+            set {
+                size.X = value;
+                RecalculateBounds();
+            }
+        }
+
+        public float Height
+        {
+            get => size.Y;
+            set {
+                size.Y = value;
+                RecalculateBounds();
+            }
+        }
 
         protected override void RecalculateBounds()
         {
-            // Centerpoint at Worldpos
-            // Need to consider the rotation of the box as well (Transform.Rotation)
-            throw new System.NotImplementedException("implement BoxCollider.RecalculateBounds()!!");
+            Vector2 topLeft = Offset - (size / 2);
+            Vector2 bottomRight = Offset - (size / 2);
+            points = new Vector2[] {topLeft, new Vector2(topLeft.X, bottomRight.Y), bottomRight, new Vector2(bottomRight.X, topLeft.Y)};
+            base.RecalculateBounds();
         }
 
         public override void Serialize(ISerializationWriter writer)

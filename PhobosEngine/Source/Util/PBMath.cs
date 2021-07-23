@@ -15,6 +15,13 @@ namespace PhobosEngine.Math
             return deg * MathF.PI / 180f;
         }
 
+        public static Vector2 Transform(Vector2 position, Matrix2D matrix)
+        {
+            Vector2 result;
+            Transform(ref position, ref matrix, out result);
+            return result;
+        }
+
         public static void Transform(ref Vector2 position, ref Matrix2D matrix, out Vector2 result)
         {
             float x = (matrix.m11 * position.X) + (matrix.m12 * position.Y) + matrix.m13;
