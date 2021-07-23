@@ -6,7 +6,7 @@ namespace PhobosEngine
 {
     public static class Physics
     {
-        private static SpatialHash spatialHash;
+        private static SpatialHash spatialHash = new SpatialHash();
 
         public static void RegisterCollider(Collider collider)
         {
