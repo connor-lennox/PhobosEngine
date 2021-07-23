@@ -67,9 +67,9 @@ namespace PhobosEngine.Math
         public bool Intersects(RectangleF other)
         {
             return other.Left < Right &&
-                   other.Right > Left &&
+                   Left < other.Right &&
                    other.Top < Bottom &&
-                   other.Bottom < Top;
+                   Top < other.Bottom;
         }
     }
 }
