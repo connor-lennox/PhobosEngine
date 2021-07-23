@@ -30,6 +30,16 @@ namespace PhobosEngine
             }
         }
 
+        public T AddComponent<T>() where T : Component, new()
+        {
+            T newComp = new T();
+            components.Add(newComp);
+            newComp.Entity = this;
+            newComp.Init();
+
+            return newComp;
+        }
+
         public T AddComponent<T>(T comp) where T : Component
         {
             if(comp.Entity != null)
