@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using PhobosEngine.Math;
 
-namespace PhobosEngine.Physics
+namespace PhobosEngine
 {
     public class SpatialHash
     {
@@ -48,7 +48,7 @@ namespace PhobosEngine.Physics
             }
         }
 
-        public HashSet<Collider> BroadphaseAABB(RectangleF bounds)
+        public HashSet<Collider> BroadphaseAABB(ref RectangleF bounds)
         {
             HashSet<Collider> overlappingColliders = new HashSet<Collider>();
             Point topLeft = CellCoordinates(bounds.Left, bounds.Top);
@@ -74,6 +74,11 @@ namespace PhobosEngine.Physics
         public void Remove(Collider collider)
         {
             hashStorage.Remove(collider);
+        }
+
+        public void Clear()
+        {
+            hashStorage.Clear();
         }
 
         private Point CellCoordinates(float x, float y)

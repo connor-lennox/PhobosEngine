@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
 
-namespace PhobosEngine.Physics
+namespace PhobosEngine
 {
     public class BoxCollider : PolygonCollider
     {

@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
 using PhobosEngine.Math;
 
-namespace PhobosEngine.Physics
+namespace PhobosEngine
 {
     public class CircleCollider : Collider
     {

@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using PhobosEngine.Math;
 
-namespace PhobosEngine.Physics
+namespace PhobosEngine
 {
     public class PolygonCollider : Collider
     {

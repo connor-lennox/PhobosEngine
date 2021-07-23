@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
 using PhobosEngine.Math;
 
-namespace PhobosEngine.Physics
+namespace PhobosEngine
 {
     public abstract class Collider : Component
     {
@@ -24,6 +24,16 @@ namespace PhobosEngine.Physics
         public override void OnParentTransformModified()
         {
             RecalculateBounds();
+        }
+
+        public void Register()
+        {
+            Physics.RegisterCollider(this);
+        }
+
+        public void Deregister()
+        {
+            Physics.RemoveCollider(this);
         }
 
         public override void Serialize(ISerializationWriter writer)
