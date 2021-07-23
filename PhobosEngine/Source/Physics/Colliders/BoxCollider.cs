@@ -42,7 +42,7 @@ namespace PhobosEngine
         protected override void RecalculateBounds()
         {
             Vector2 topLeft = Offset - (size / 2);
-            Vector2 bottomRight = Offset - (size / 2);
+            Vector2 bottomRight = Offset + (size / 2);
             points = new Vector2[] {topLeft, new Vector2(topLeft.X, bottomRight.Y), bottomRight, new Vector2(bottomRight.X, topLeft.Y)};
             base.RecalculateBounds();
         }

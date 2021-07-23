@@ -23,7 +23,7 @@ namespace PhobosEngine
 
         public CircleCollider() : base()
         {
-            radius = 1;
+            radius = 0.5f;
         }
 
         protected override void RecalculateBounds()
