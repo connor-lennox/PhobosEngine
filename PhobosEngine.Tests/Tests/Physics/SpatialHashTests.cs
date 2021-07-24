@@ -48,5 +48,20 @@ namespace PhobosEngine.Tests
             Assert.AreEqual(0, Physics.BroadphaseAABB(new RectangleF(14, -7, 2, 2)).Count);
         }
 
+        [Test]
+        public void MovingColliders_UpdatesSpatialHash()
+        {
+            RectangleF checkRect = new RectangleF(0, 0, 4, 4);
+
+            boxCollider.Register();
+            Assert.AreEqual(1, Physics.BroadphaseAABB(checkRect).Count);
+
+            boxEntity.Transform.Position = new Vector2(-4, -4);
+            Assert.AreEqual(0, Physics.BroadphaseAABB(checkRect).Count);
+
+            boxEntity.Transform.Position = new Vector2(1, 1);
+            Assert.AreEqual(1, Physics.BroadphaseAABB(checkRect).Count);
+        }
+
     }
 }
