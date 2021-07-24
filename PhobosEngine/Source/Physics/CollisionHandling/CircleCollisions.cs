@@ -39,7 +39,34 @@ namespace PhobosEngine
                 return true;
             }
 
-            bool collided = squareDistance < c1.EffectiveRadius;
+            bool collided = squareDistance < (c1.EffectiveRadius * c1.EffectiveRadius);
+            if(collided)
+            {
+                result.normal = Vector2.Normalize(c1.WorldPos - closestPoint);
+                result.depth = c1.EffectiveRadius - MathF.Sqrt(squareDistance);
+                result.point = closestPoint;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool CircleToAABB(CircleCollider c1, AABBCollider b2, out CollisionResult result)
+        {
+            result = new CollisionResult();
+
+            Vector2 closestPoint = ShapeUtil.ClosestPointOnAABB(b2, c1.WorldPos, out float squareDistance);
+            if(ShapeUtil.PointInAABB(b2, c1.WorldPos))
+            {
+                result.normal = Vector2.Normalize(c1.WorldPos - closestPoint);
+                result.depth = MathF.Sqrt(squareDistance) - c1.EffectiveRadius;
+                result.point = closestPoint;
+
+                return true;
+            }
+
+            bool collided = squareDistance < (c1.EffectiveRadius * c1.EffectiveRadius);
             if(collided)
             {
                 result.normal = Vector2.Normalize(c1.WorldPos - closestPoint);

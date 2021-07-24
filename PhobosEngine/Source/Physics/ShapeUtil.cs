@@ -21,10 +21,10 @@ namespace PhobosEngine
         {
             Vector2 closestPoint = Vector2.Zero;
             float minSqDist = float.MaxValue;
-            for(int i = 0, j = collider.Points.Length-1; i < collider.Points.Length; j = i++)
+            for(int i = 0, j = collider.EffectivePoints.Length-1; i < collider.EffectivePoints.Length; j = i++)
             {
-                Vector2 p1 = collider.Points[i];
-                Vector2 p2 = collider.Points[j];
+                Vector2 p1 = collider.EffectivePoints[i];
+                Vector2 p2 = collider.EffectivePoints[j];
 
                 Vector2 tempClosest = ClosestPointOnLine(p1, p2, target);
                 float sqDist = Vector2.DistanceSquared(tempClosest, target);
@@ -52,6 +52,33 @@ namespace PhobosEngine
 				}
             }
             return inside;
+        }
+
+        public static Vector2 ClosestPointOnAABB(AABBCollider aabb, Vector2 target, out float squareDistance)
+        {
+            Vector2 closestPoint = Vector2.Zero;
+            float minSqDist = float.MaxValue;
+            for(int i = 0, j = aabb.Points.Length-1; i < aabb.Points.Length; j = i++)
+            {
+                Vector2 p1 = aabb.Points[i];
+                Vector2 p2 = aabb.Points[j];
+
+                Vector2 tempClosest = ClosestPointOnLine(p1, p2, target);
+                float sqDist = Vector2.DistanceSquared(tempClosest, target);
+                if(sqDist < minSqDist)
+                {
+                    minSqDist = sqDist;
+                    closestPoint = tempClosest;
+                }
+            }
+
+            squareDistance = minSqDist;
+            return closestPoint;
+        }
+
+        public static bool PointInAABB(AABBCollider aabb, Vector2 target)
+        {
+            return aabb.Bounds.Contains(target.X, target.Y);
         }
     }
 }
