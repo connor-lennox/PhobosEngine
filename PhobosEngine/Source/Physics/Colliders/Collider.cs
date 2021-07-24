@@ -11,8 +11,18 @@ namespace PhobosEngine
 
         public RectangleF Bounds {get; protected set;}
 
-        public Vector2 Offset {get; protected set;}
+        private Vector2 offset;
+        public Vector2 Offset {
+            get => offset;
+            set {
+                offset = value;
+                UpdateCollider();
+            }
+        }
+
         public Vector2 WorldPos => Entity.Transform.Position + Offset;
+
+        protected bool registered = false;
 
         public Collider()
         {
@@ -21,24 +31,37 @@ namespace PhobosEngine
 
         public override void Init()
         {
-            RecalculateBounds();
+            UpdateCollider();
         }
 
         protected abstract void RecalculateBounds();
         
         public override void OnParentTransformModified()
         {
-            RecalculateBounds();
+            UpdateCollider();
+        }
+
+        private void UpdateCollider()
+        {
+            if(this.Entity != null) {
+                RecalculateBounds();
+                if(registered)
+                {
+                    Physics.UpdateCollider(this);
+                }
+            }
         }
 
         public void Register()
         {
             Physics.RegisterCollider(this);
+            registered = true;
         }
 
         public void Deregister()
         {
             Physics.RemoveCollider(this);
+            registered = false;
         }
 
         public override void Serialize(ISerializationWriter writer)
