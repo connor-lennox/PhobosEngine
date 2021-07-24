@@ -16,6 +16,7 @@ namespace PhobosEngine
         }
 
         private Vector2[] effectivePoints;
+        public Vector2[] EffectivePoints { get=>effectivePoints; }
 
         public PolygonCollider() : base()
         {
