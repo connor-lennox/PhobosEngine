@@ -24,5 +24,32 @@ namespace PhobosEngine
 
             return false;
         }
+
+        public static bool CircleToPoly(CircleCollider c1, PolygonCollider p2, out CollisionResult result)
+        {
+            result = new CollisionResult();
+
+            Vector2 closestPoint = ShapeUtil.ClosestPointOnPoly(p2, c1.WorldPos, out float squareDistance);
+            if(ShapeUtil.PointInPoly(p2, c1.WorldPos))
+            {
+                result.normal = Vector2.Normalize(c1.WorldPos - closestPoint);
+                result.depth = MathF.Sqrt(squareDistance) - c1.EffectiveRadius;
+                result.point = closestPoint;
+
+                return true;
+            }
+
+            bool collided = squareDistance < c1.EffectiveRadius;
+            if(collided)
+            {
+                result.normal = Vector2.Normalize(c1.WorldPos - closestPoint);
+                result.depth = c1.EffectiveRadius - MathF.Sqrt(squareDistance);
+                result.point = closestPoint;
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }
