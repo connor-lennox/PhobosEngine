@@ -12,7 +12,7 @@ namespace PhobosEngine
             get => radius; 
             set {
                 radius = value;
-                RecalculateBounds();
+                UpdateCollider();
             }
         }
 

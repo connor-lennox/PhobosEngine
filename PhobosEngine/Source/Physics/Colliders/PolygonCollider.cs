@@ -11,7 +11,7 @@ namespace PhobosEngine
             get => points;
             set {
                 points = value;
-                RecalculateBounds();
+                UpdateCollider();
             }
         }
 

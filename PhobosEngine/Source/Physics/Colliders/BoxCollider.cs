@@ -12,7 +12,7 @@ namespace PhobosEngine
             get => size;
             set {
                 size = value;
-                RecalculateBounds();
+                UpdateCollider();
             }
         }
 
@@ -21,7 +21,7 @@ namespace PhobosEngine
             get => size.X;
             set {
                 size.X = value;
-                RecalculateBounds();
+                UpdateCollider();
             }
         }
 
@@ -30,7 +30,7 @@ namespace PhobosEngine
             get => size.Y;
             set {
                 size.Y = value;
-                RecalculateBounds();
+                UpdateCollider();
             }
         }
 

@@ -41,7 +41,7 @@ namespace PhobosEngine
             UpdateCollider();
         }
 
-        private void UpdateCollider()
+        protected void UpdateCollider()
         {
             if(this.Entity != null) {
                 RecalculateBounds();
