@@ -22,6 +22,12 @@ namespace PhobosEngine.Math
             return result;
         }
 
+        public static Vector2 Perpendicular(ref Vector2 v1, ref Vector2 v2)
+        {
+            // Flip X and Y and negate new X
+            return new Vector2(-1f * (v2.Y - v1.Y), v2.X - v1.X);
+        }
+
         public static void Transform(ref Vector2 position, ref Matrix2D matrix, out Vector2 result)
         {
             float x = (matrix.m11 * position.X) + (matrix.m12 * position.Y) + matrix.m13;

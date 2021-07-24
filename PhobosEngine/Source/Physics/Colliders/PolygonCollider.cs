@@ -18,6 +18,20 @@ namespace PhobosEngine
         private Vector2[] effectivePoints;
         public Vector2[] EffectivePoints { get=>effectivePoints; }
 
+        protected Vector2[] edgeNormals;
+        public Vector2[] EdgeNormals {
+            get {
+                if(edgeNormalsDirty)
+                {
+                    CalculateEdgeNormals();
+                    edgeNormalsDirty = false;
+                }
+                return edgeNormals;
+            }
+        }
+
+        private bool edgeNormalsDirty = true;
+
         public PolygonCollider() : base()
         {
             
@@ -25,6 +39,7 @@ namespace PhobosEngine
 
         private void CalculateEffectivePoints()
         {
+            edgeNormalsDirty = true;
             effectivePoints = new Vector2[points.Length];
             for(int i = 0; i < points.Length; i++)
             {
@@ -55,6 +70,21 @@ namespace PhobosEngine
                 }
 
                 Bounds = new RectangleF(minX, minY, (maxX - minX), (maxY - minY));
+            }
+        }
+
+        protected virtual void CalculateEdgeNormals()
+        {
+            int numEdges = EffectivePoints.Length;
+            if(edgeNormals == null || edgeNormals.Length != numEdges)
+            {
+                edgeNormals = new Vector2[numEdges];
+            }
+
+            for(int i = 0, j = EffectivePoints.Length-1; i < EffectivePoints.Length; j = i++)
+            {
+                Vector2 perp = PBMath.Perpendicular(ref EffectivePoints[i], ref EffectivePoints[j]);
+                edgeNormals[i] = Vector2.Normalize(perp);
             }
         }
     }
