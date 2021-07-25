@@ -11,9 +11,11 @@ namespace PhobosEngine.Graphics
             return Transform.Position - new Vector2(sprite.Width * 0.5f, sprite.Height * 0.5f);
         }}
 
+        // TODO: sprite sorting layers
+
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(sprite, SpriteOrigin, Color.White);
+            batch.Draw(sprite, SpriteOrigin, null, Color.White, Transform.Rotation, Vector2.Zero, Transform.Scale, SpriteEffects.None, 0);
         }
 
         public override void Serialize(ISerializationWriter writer)
