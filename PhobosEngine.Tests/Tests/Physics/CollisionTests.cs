@@ -113,7 +113,7 @@ namespace PhobosEngine.Tests
         [Test]
         public void FarPolys_Collision_ReturnsFalse()
         {
-                        GameEntity e1 = new GameEntity();
+            GameEntity e1 = new GameEntity();
             PolygonCollider p1 = e1.AddComponent<PolygonCollider>();
 
             GameEntity e2 = new GameEntity();
@@ -123,6 +123,137 @@ namespace PhobosEngine.Tests
             p2.Points = new Vector2[] {new Vector2(5, 5), new Vector2(3, 5), new Vector2(5, 3)};
 
             Assert.IsFalse(PolygonCollisions.PolyToPoly(p1, p2, out CollisionResult result));
+        }
+
+        [Test]
+        public void LineToLine_Intersecting_CorrectValues()
+        {
+            Vector2 a1 = new Vector2(1, 1);
+            Vector2 a2 = new Vector2(2, 3);
+
+            Vector2 b1 = new Vector2(0, 2);
+            Vector2 b2 = new Vector2(4, 0);
+
+            Assert.IsTrue(LineCollisions.LineToLine(a1, a2, b1, b2, out Vector2 intersect));
+            Assert.AreEqual(new Vector2(1.2f, 1.4f), intersect);
+        }
+
+        [Test]
+        public void LineToLine_NotIntersecting_ReturnsFalse()
+        {
+            Vector2 a1 = new Vector2(1, 1);
+            Vector2 a2 = new Vector2(2, 3);
+
+            Vector2 b1 = new Vector2(0, 2);
+            Vector2 b2 = new Vector2(1, 1.5f);
+
+            Assert.IsFalse(LineCollisions.LineToLine(a1, a2, b1, b1, out Vector2 intersect));
+        }
+
+        [Test]
+        public void LineToLine_Parallel_ReturnsFalse()
+        {
+            Vector2 a1 = new Vector2(1, 1);
+            Vector2 a2 = new Vector2(2, 3);
+
+            Vector2 b1 = a1 + Vector2.One;
+            Vector2 b2 = a2 + Vector2.One;
+
+            Assert.IsFalse(LineCollisions.LineToLine(a1, a2, b1, b2, out Vector2 intersect));
+        }
+
+        [Test]
+        public void LineToCircle_Intersect_CorrectValues()
+        {
+            Vector2 a1 = new Vector2(0, 0);
+            Vector2 a2 = new Vector2(5, 0);
+
+            GameEntity entity = new GameEntity();
+            entity.Transform.Position = new Vector2(3, 0);
+            CircleCollider circle = entity.AddComponent<CircleCollider>();
+            circle.Radius = 1f;
+
+            Assert.IsTrue(LineCollisions.LineToCircle(a1, a2, circle, out RaycastHit hit));
+            Assert.AreEqual(new Vector2(-1, 0), hit.normal);
+            Assert.AreEqual(circle, hit.collider);
+            Assert.AreEqual(new Vector2(2, 0), hit.point);
+            Assert.AreEqual(2, hit.distance);
+        }
+
+        [Test]
+        public void LineToCircle_NotIntersecting_ReturnsFalse()
+        {
+            Vector2 a1 = new Vector2(0, 0);
+            Vector2 a2 = new Vector2(5, 0);
+
+            GameEntity entity = new GameEntity();
+            entity.Transform.Position = new Vector2(3, 3);
+            CircleCollider circle = entity.AddComponent<CircleCollider>();
+            circle.Radius = 1f;
+
+            Assert.IsFalse(LineCollisions.LineToCircle(a1, a2, circle, out RaycastHit hit));
+        }
+
+        [Test]
+        public void LineToAABB_Intersecting_CorrectValues()
+        {
+            Vector2 a1 = new Vector2(0, 0);
+            Vector2 a2 = new Vector2(5, 0);
+
+            GameEntity entity = new GameEntity();
+            entity.Transform.Position = new Vector2(3, 0);
+            AABBCollider collider = entity.AddComponent<AABBCollider>();
+            collider.Size = new Vector2(2, 2);
+
+            Assert.IsTrue(LineCollisions.LineToAABB(a1, a2, collider, out RaycastHit hit));
+            Assert.AreEqual(collider, hit.collider);
+            Assert.AreEqual(new Vector2(-1, 0), hit.normal);
+            Assert.AreEqual(new Vector2(2, 0), hit.point);
+            Assert.AreEqual(2, hit.distance);
+        }
+
+        [Test]
+        public void LineToAABB_NotIntersecting_ReturnsFalse()
+        {
+            Vector2 a1 = new Vector2(0, 0);
+            Vector2 a2 = new Vector2(5, 0);
+            
+            GameEntity entity = new GameEntity();
+            entity.Transform.Position = new Vector2(3, 3);
+            AABBCollider collider = entity.AddComponent<AABBCollider>();
+            collider.Size = Vector2.One;
+
+            Assert.IsFalse(LineCollisions.LineToAABB(a1, a2, collider, out RaycastHit hit));
+        }
+
+        [Test]
+        public void LineToPoly_Intersecting_CorrectValues()
+        {
+            Vector2 a1 = new Vector2(0, 0);
+            Vector2 a2 = new Vector2(5, 0);
+            GameEntity entity = new GameEntity();
+            entity.Transform.Position = new Vector2(3, 0);
+            PolygonCollider collider = entity.AddComponent<PolygonCollider>();
+            collider.Points = new Vector2[] {new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 0)};
+
+            Assert.IsTrue(LineCollisions.LineToPoly(a1, a2, collider, out RaycastHit hit));
+            Assert.AreEqual(collider, hit.collider);
+            Assert.AreEqual(new Vector2(2, 0), hit.point);
+            Assert.AreEqual(new Vector2(-1, 0), hit.normal);
+            Assert.AreEqual(2, hit.distance);
+        }
+
+        [Test]
+        public void LineToPoly_NotIntersecting_ReturnsFalse()
+        {
+            Vector2 a1 = new Vector2(0, 0);
+            Vector2 a2 = new Vector2(5, 0);
+            GameEntity entity = new GameEntity();
+            entity.Transform.Position = new Vector2(3, 3);
+            PolygonCollider collider = entity.AddComponent<PolygonCollider>();
+            collider.Points = new Vector2[] {new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 0)};
+
+            Assert.IsFalse(LineCollisions.LineToPoly(a1, a2, collider, out RaycastHit hit));
         }
     }
 }
