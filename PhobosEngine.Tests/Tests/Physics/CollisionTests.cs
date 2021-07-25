@@ -95,5 +95,35 @@ namespace PhobosEngine.Tests
 
             Assert.IsTrue(CircleCollisions.CircleToPoly(c1, p2, out CollisionResult result));
         }
+
+        [Test]
+        public void NearPolys_Collision_ReturnsTrue()
+        {
+            GameEntity e1 = new GameEntity();
+            PolygonCollider p1 = e1.AddComponent<PolygonCollider>();
+
+            GameEntity e2 = new GameEntity();
+            PolygonCollider p2 = e2.AddComponent<PolygonCollider>();
+
+            p1.Points = new Vector2[] {new Vector2(0, 0), new Vector2(2, 0), new Vector2(2, 2), new Vector2(0, 2)};
+            p2.Points = new Vector2[] {new Vector2(1, 1), new Vector2(3, 1), new Vector2(1, 3)};
+
+            Assert.IsTrue(PolygonCollisions.PolyToPoly(p1, p2, out CollisionResult result));
+        }
+
+        [Test]
+        public void FarPolys_Collision_ReturnsFalse()
+        {
+                        GameEntity e1 = new GameEntity();
+            PolygonCollider p1 = e1.AddComponent<PolygonCollider>();
+
+            GameEntity e2 = new GameEntity();
+            PolygonCollider p2 = e2.AddComponent<PolygonCollider>();
+
+            p1.Points = new Vector2[] {new Vector2(0, 0), new Vector2(2, 0), new Vector2(2, 2), new Vector2(0, 2)};
+            p2.Points = new Vector2[] {new Vector2(5, 5), new Vector2(3, 5), new Vector2(5, 3)};
+
+            Assert.IsFalse(PolygonCollisions.PolyToPoly(p1, p2, out CollisionResult result));
+        }
     }
 }
