@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
 
-namespace PhobosEngine.Graphics
+namespace PhobosEngine
 {
     public class Camera : Component
     {

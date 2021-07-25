@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace PhobosEngine
+namespace PhobosEngine.Collisions
 {
     public static class ShapeUtil
     {

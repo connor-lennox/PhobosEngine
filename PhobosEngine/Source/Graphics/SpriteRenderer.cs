@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PhobosEngine.Serialization;
 
-namespace PhobosEngine.Graphics
+namespace PhobosEngine
 {
     public class SpriteRenderer : Component
     {

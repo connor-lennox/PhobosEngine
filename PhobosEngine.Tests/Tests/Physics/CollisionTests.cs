@@ -4,8 +4,7 @@ using NUnit.Framework;
 
 using Microsoft.Xna.Framework;
 
-using PhobosEngine;
-using PhobosEngine.Math;
+using PhobosEngine.Collisions;
 
 namespace PhobosEngine.Tests
 {

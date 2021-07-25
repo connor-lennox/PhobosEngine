@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using PhobosEngine.Graphics;
-
 namespace PhobosEngine
 {
     public class PhobosEngine : Game
@@ -61,6 +59,8 @@ namespace PhobosEngine
             float x = MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds);
             float y = MathF.Sin((float)gameTime.TotalGameTime.TotalSeconds);
             testTransform.Position = new Vector2(x, y) * 100;
+            testTransform.PointTowards(Vector2.Zero);
+            testTransform.Scale = new Vector2(MathF.Abs(x)+.25f, MathF.Abs(y)+.25f);
 
             base.Update(gameTime);
         }

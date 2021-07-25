@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using PhobosEngine.Math;
 
-namespace PhobosEngine
+namespace PhobosEngine.Collisions
 {
     public class SpatialHash
     {

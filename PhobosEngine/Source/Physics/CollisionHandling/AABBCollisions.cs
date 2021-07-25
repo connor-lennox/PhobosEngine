@@ -1,4 +1,4 @@
-namespace PhobosEngine
+namespace PhobosEngine.Collisions
 {
     public static class AABBCollisions
     {
