@@ -2,6 +2,8 @@ using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
 using PhobosEngine.Math;
 
+using PhobosEngine.Collisions;
+
 namespace PhobosEngine
 {
     public class CircleCollider : Collider
@@ -30,6 +32,11 @@ namespace PhobosEngine
         {
             effectiveRadius = Radius * Transform.Scale.X;
             Bounds = new RectangleF(WorldPos - new Vector2(EffectiveRadius, EffectiveRadius), new Vector2(EffectiveRadius*2, EffectiveRadius*2));
+        }
+
+        public override bool LineIntersects(Vector2 start, Vector2 end, out RaycastHit hit)
+        {
+            return LineCollisions.LineToCircle(start, end, this, out hit);
         }
 
         public override void Serialize(ISerializationWriter writer)

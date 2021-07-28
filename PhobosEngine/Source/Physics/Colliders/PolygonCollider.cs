@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
 using PhobosEngine.Math;
+using PhobosEngine.Serialization;
+using PhobosEngine.Collisions;
 
 namespace PhobosEngine
 {
@@ -86,6 +88,23 @@ namespace PhobosEngine
                 Vector2 perp = PBMath.Perpendicular(ref EffectivePoints[i], ref EffectivePoints[j]);
                 edgeNormals[i] = Vector2.Normalize(perp);
             }
+        }
+
+        public override bool LineIntersects(Vector2 start, Vector2 end, out RaycastHit hit)
+        {
+            return LineCollisions.LineToPoly(start, end, this, out hit);
+        }
+
+        public override void Serialize(ISerializationWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(points);
+        }
+
+        public override void Deserialize(ISerializationReader reader)
+        {
+            base.Deserialize(reader);
+            Points = reader.ReadVector2Array();
         }
     }
 }

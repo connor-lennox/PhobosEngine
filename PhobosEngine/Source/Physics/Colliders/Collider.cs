@@ -64,6 +64,8 @@ namespace PhobosEngine
             registered = false;
         }
 
+        public abstract bool LineIntersects(Vector2 start, Vector2 end, out RaycastHit hit);
+
         public override void Serialize(ISerializationWriter writer)
         {
             base.Serialize(writer);
