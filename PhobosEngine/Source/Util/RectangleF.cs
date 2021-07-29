@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 
 namespace PhobosEngine.Math
@@ -70,6 +71,53 @@ namespace PhobosEngine.Math
                    Left < other.Right &&
                    other.Top < Bottom &&
                    Top < other.Bottom;
+        }
+
+        public bool LineIntersects(Vector2 start, Vector2 end)
+        {
+            Vector2 direction = end - start;
+
+            float distance = 0f;
+            float maxValue = float.MaxValue;
+
+            float recipdX = 1f / direction.X;
+            float checkLow = (Left - start.X ) * recipdX;
+            float checkHigh = (Right - start.X) * recipdX;
+
+            if(checkLow > checkHigh)
+            {
+                float temp = checkLow;
+                checkLow = checkHigh;
+                checkHigh = temp;
+            }
+
+            distance = MathF.Max(checkLow, distance);
+            maxValue = MathF.Min(checkHigh, maxValue);
+
+            if(distance > maxValue)
+            {
+                return false;
+            }
+
+            float recipdY = 1f / direction.Y;
+            checkLow = (Top - start.Y) * recipdY;
+            checkHigh = (Bottom - start.Y) * recipdY;
+            if(checkLow > checkHigh)
+            {
+                float temp = checkLow;
+                checkLow = checkHigh;
+                checkHigh = temp;
+            }
+
+            distance = MathF.Max(checkLow, distance);
+            maxValue = MathF.Min(checkHigh, maxValue);
+
+            if(distance > maxValue)
+            {
+                return false;
+            }
+
+            return distance <= 1.0f;
         }
     }
 }

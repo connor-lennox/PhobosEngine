@@ -15,6 +15,16 @@ namespace PhobosEngine.Math
             return deg * MathF.PI / 180f;
         }
 
+        public static float Approach(float start, float end, float shift)
+        {
+            if(start < end)
+            {
+                return MathF.Min(start + shift, end);
+            } else {
+                return MathF.Max(start - shift, end);
+            }
+        }
+
         public static Vector2 Transform(Vector2 position, Matrix2D matrix)
         {
             Vector2 result;

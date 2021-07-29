@@ -11,6 +11,7 @@ namespace PhobosEngine.Collisions
         private SpatialHashStorage hashStorage = new SpatialHashStorage();
         private int cellSize;
         private float inverseCellSize;
+        private LinecastManager linecastManager = new LinecastManager();
 
         public SpatialHash(int cellSize = 100)
         {
@@ -71,6 +72,71 @@ namespace PhobosEngine.Collisions
             return overlappingColliders;
         }
 
+        public int Linecast(Vector2 start, Vector2 end, RaycastHit[] outputHits)
+        {
+            Point currentCell = CellCoordinates(start.X, start.Y);
+            Point endCell = CellCoordinates(end.X, end.Y);
+            
+            Vector2 currentLocation = start;
+
+            Vector2 direction = (end - start);
+
+            linecastManager.Init(ref start, ref end, outputHits);
+
+            // What direction in the cell space are we walking in?
+            int cellStepX = MathF.Sign(direction.X);
+            int cellStepY = MathF.Sign(direction.Y);
+
+            // Avoid accidently crossing a border we don't need
+            if(currentCell.X == endCell.X) cellStepX = 0;
+            if(currentCell.Y == endCell.Y) cellStepY = 0;
+
+            float xStep = cellStepX < 0 ? 0f : cellStepX;
+            float yStep = cellStepY < 0 ? 0f : cellStepY;
+            float nextBoundaryX = (currentCell.X + xStep) * cellSize;
+            float nextBoundaryY = (currentCell.Y + yStep) * cellSize;
+
+            // Find time when ray crosses first X/vertical boundary and Y/horizontal boundary
+            float tMaxX = direction.X != 0 ? (nextBoundaryX - start.X) / direction.X : float.MaxValue;
+            float tMaxY = direction.Y != 0 ? (nextBoundaryY - start.Y) / direction.Y : float.MaxValue;
+
+            // Distance to go before crossing any cell boundary
+            float tDeltaX = direction.X != 0 ? cellSize / (direction.X * cellStepX) : float.MaxValue;
+            float tDeltaY = direction.Y != 0 ? cellSize / (direction.Y * cellStepY) : float.MaxValue;
+
+            List<Collider> cellColliders = CollidersAtCell(currentCell.X, currentCell.Y);
+
+            if(cellColliders != null && linecastManager.CheckCell(cellColliders))
+            {
+                linecastManager.Clear();
+                return linecastManager.numHits;
+            }
+
+            // Iterate through cells, calling the function of the hit parser as we go
+            while(currentCell.X != endCell.X || currentCell.Y != endCell.Y)
+            {
+                // Move to the next cell
+                if(tMaxX < tMaxY)
+                {
+                    currentCell.X = (int) PBMath.Approach(currentCell.X, endCell.X, MathF.Abs(cellStepX));
+                    tMaxX += tDeltaX;
+                } else {
+                    currentCell.Y = (int) PBMath.Approach(currentCell.Y, endCell.Y, MathF.Abs(cellStepY));
+                }
+
+                // Check colliders at this cell
+                cellColliders = CollidersAtCell(currentCell.X, currentCell.Y);
+                if(cellColliders != null && linecastManager.CheckCell(cellColliders))
+                {
+                    linecastManager.Clear();
+                    return linecastManager.numHits;
+                }
+            }
+            
+            linecastManager.Clear();
+            return linecastManager.numHits;
+        }
+
         public void Remove(Collider collider)
         {
             hashStorage.Remove(collider);
@@ -122,5 +188,79 @@ namespace PhobosEngine.Collisions
         {
             store.Clear();
         }
+    }
+
+    class LinecastManager
+    {
+        private static Comparison<RaycastHit> hitDistanceComparison = (x, y) => x.distance.CompareTo(y.distance);
+
+        private RaycastHit[] outHits;
+        private HashSet<Collider> checkedColliders = new HashSet<Collider>();
+        private List<RaycastHit> cellHits = new List<RaycastHit>();
+        public int numHits = 0;
+        private RaycastHit tempHit;
+ 
+        private Vector2 start;
+        private Vector2 end;
+
+
+        public void Init(ref Vector2 start, ref Vector2 end, RaycastHit[] hits)
+        {
+            this.start = start;
+            this.end = end;
+            this.outHits = hits;
+            this.numHits = 0;
+        }
+
+        public void Clear()
+        {
+            outHits = null;
+            checkedColliders.Clear();
+            cellHits.Clear();
+        }
+
+        public bool CheckCell(List<Collider> cell)
+        {
+            for(int i = 0; i < cell.Count; i++)
+            {
+                Collider collider = cell[i];
+
+                if(checkedColliders.Contains(collider))
+                {
+                    continue;
+                }
+
+                checkedColliders.Add(collider);
+
+                // Check if we hit the bounds:
+                if(collider.Bounds.LineIntersects(start, end))
+                {
+                    if(collider.LineIntersects(start, end, out tempHit))
+                    {
+                        tempHit.collider = collider;
+                        cellHits.Add(tempHit);
+                    }
+                }
+            }
+
+            if(cellHits.Count == 0)
+            {
+                return false;
+            }
+
+            cellHits.Sort(hitDistanceComparison);
+            for(int i = 0; i < cellHits.Count; i++)
+            {
+                outHits[numHits] = cellHits[i];
+                numHits++;
+                if(numHits == outHits.Length)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
     }
 }
