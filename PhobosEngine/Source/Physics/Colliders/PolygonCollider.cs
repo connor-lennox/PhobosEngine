@@ -95,6 +95,26 @@ namespace PhobosEngine
             return CollisionResolvers.LineToPoly(start, end, this, out hit);
         }
 
+        public override bool CollidesWith(Collider other, out CollisionResult result)
+        {
+            if(other is PolygonCollider)
+            {
+                return CollisionResolvers.PolyToPoly(this, other as PolygonCollider, out result);
+            }
+
+            if(other is CircleCollider)
+            {
+                if(CollisionResolvers.CircleToPoly(other as CircleCollider, this, out result))
+                {
+                    result.InvertResult();
+                    return true;
+                }
+                return false;
+            }
+
+            throw new NotImplementedException($"Collisions of Polygon to {other} is not supported.");
+        }
+
         public override void Serialize(ISerializationWriter writer)
         {
             base.Serialize(writer);

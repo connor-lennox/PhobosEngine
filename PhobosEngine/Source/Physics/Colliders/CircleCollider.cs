@@ -39,6 +39,26 @@ namespace PhobosEngine
             return CollisionResolvers.LineToCircle(start, end, this, out hit);
         }
 
+        public override bool CollidesWith(Collider other, out CollisionResult result)
+        {
+            if(other is CircleCollider)
+            {
+                return CollisionResolvers.CircleToCircle(this, other as CircleCollider, out result);
+            }
+
+            if(other is PolygonCollider)
+            {
+                return CollisionResolvers.CircleToPoly(this, other as PolygonCollider, out result);
+            }
+
+            if(other is AABBCollider)
+            {
+                return CollisionResolvers.CircleToAABB(this, other as AABBCollider, out result);
+            }
+
+            throw new System.NotImplementedException($"Collisions of Circle to {other} is not supported.");
+        }
+
         public override void Serialize(ISerializationWriter writer)
         {
             base.Serialize(writer);

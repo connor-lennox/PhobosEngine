@@ -39,6 +39,26 @@ namespace PhobosEngine
             return CollisionResolvers.LineToAABB(start, end, this, out hit);
         }
 
+        public override bool CollidesWith(Collider other, out CollisionResult result)
+        {
+            if(other is AABBCollider)
+            {
+                return CollisionResolvers.AABBToAABB(this, other as AABBCollider, out result);
+            }
+
+            if(other is CircleCollider)
+            {
+                if(CollisionResolvers.CircleToAABB(other as CircleCollider, this, out result))
+                {
+                    result.InvertResult();
+                    return true;
+                }
+                return false;
+            }
+
+            throw new System.NotImplementedException($"Collisions of AABB to {other} are not supported.");
+        }
+
         public override void Serialize(ISerializationWriter writer)
         {
             base.Serialize(writer);

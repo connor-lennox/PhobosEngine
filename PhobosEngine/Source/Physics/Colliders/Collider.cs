@@ -6,8 +6,6 @@ namespace PhobosEngine
 {
     public abstract class Collider : Component
     {
-        public event CollisionEventHandler OnCollisionEnter;
-        public event CollisionEventHandler OnCollisionExit;
 
         public RectangleF Bounds {get; protected set;}
 
@@ -65,6 +63,7 @@ namespace PhobosEngine
         }
 
         public abstract bool LineIntersects(Vector2 start, Vector2 end, out RaycastHit hit);
+        public abstract bool CollidesWith(Collider other, out CollisionResult result);
 
         public override void Serialize(ISerializationWriter writer)
         {
