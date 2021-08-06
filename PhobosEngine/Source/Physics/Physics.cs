@@ -33,6 +33,13 @@ namespace PhobosEngine
             return spatialHash.BroadphaseAABB(ref bounds);
         }
 
+        public static HashSet<Collider> BroadphaseAABBExcludeSelf(RectangleF bounds, Collider self)
+        {
+            HashSet<Collider> result = spatialHash.BroadphaseAABB(ref bounds);
+            result.Remove(self);
+            return result;
+        }
+
         public static bool Raycast(Vector2 origin, Vector2 direction, float maxLength, out RaycastHit hit)
         {
             if(spatialHash.Linecast(origin, origin + Vector2.Normalize(direction) * maxLength, tempHit) > 0) 
