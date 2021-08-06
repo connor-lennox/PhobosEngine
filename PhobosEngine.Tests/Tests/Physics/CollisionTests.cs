@@ -27,6 +27,8 @@ namespace PhobosEngine.Tests
             e2.Transform.Position = new Vector2(0.5f, 0.5f);
 
             Assert.IsTrue(CollisionResolvers.CircleToCircle(c1, c2, out CollisionResult result));
+
+            Assert.IsTrue(c1.CollidesWith(c2, out CollisionResult result2));
         }
 
         [Test]
@@ -45,6 +47,8 @@ namespace PhobosEngine.Tests
             e2.Transform.Position = new Vector2(2.5f, 0.5f);
 
             Assert.IsFalse(CollisionResolvers.CircleToCircle(c1, c2, out CollisionResult result));
+
+            Assert.IsFalse(c1.CollidesWith(c2, out CollisionResult result2));
         }
 
         [Test]
@@ -61,6 +65,8 @@ namespace PhobosEngine.Tests
             p2.Points = new Vector2[] {new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1)};
 
             Assert.IsTrue(CollisionResolvers.CircleToPoly(c1, p2, out CollisionResult result));
+
+            Assert.IsTrue(c1.CollidesWith(p2, out CollisionResult result2));
         }
 
         [Test]
@@ -77,6 +83,8 @@ namespace PhobosEngine.Tests
             p2.Points = new Vector2[] {new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1)};
 
             Assert.IsFalse(CollisionResolvers.CircleToPoly(c1, p2, out CollisionResult result));
+
+            Assert.IsFalse(c1.CollidesWith(p2, out CollisionResult result2));
         }
 
         [Test]
@@ -93,6 +101,8 @@ namespace PhobosEngine.Tests
             p2.Points = new Vector2[] {new Vector2(0, 0), new Vector2(5, 5), new Vector2(0, 5)};
 
             Assert.IsTrue(CollisionResolvers.CircleToPoly(c1, p2, out CollisionResult result));
+
+            Assert.IsTrue(c1.CollidesWith(p2, out CollisionResult result2));
         }
 
         [Test]
@@ -108,6 +118,8 @@ namespace PhobosEngine.Tests
             p2.Points = new Vector2[] {new Vector2(1, 1), new Vector2(3, 1), new Vector2(1, 3)};
 
             Assert.IsTrue(CollisionResolvers.PolyToPoly(p1, p2, out CollisionResult result));
+
+            Assert.IsTrue(p1.CollidesWith(p2, out CollisionResult result2));
         }
 
         [Test]
@@ -123,6 +135,8 @@ namespace PhobosEngine.Tests
             p2.Points = new Vector2[] {new Vector2(5, 5), new Vector2(3, 5), new Vector2(5, 3)};
 
             Assert.IsFalse(CollisionResolvers.PolyToPoly(p1, p2, out CollisionResult result));
+
+            Assert.IsFalse(p1.CollidesWith(p2, out CollisionResult result2));
         }
 
         [Test]
