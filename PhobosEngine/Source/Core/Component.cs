@@ -18,6 +18,21 @@ namespace PhobosEngine
 
         public virtual void OnParentTransformModified() {}
 
+        public T GetComponent<T>() where T : Component
+        {
+            return Entity.GetComponent<T>();
+        }
+
+        public T[] GetComponents<T>() where T : Component
+        {
+            return Entity.GetComponents<T>();
+        }
+
+        public bool HasComponent<T>() where T : Component
+        {
+            return Entity.HasComponent<T>();
+        }
+
         public virtual void Serialize(ISerializationWriter writer)
         {
             // Need to first serialize the real type of this Component
