@@ -41,6 +41,7 @@ namespace PhobosEngine
 
         public override bool CollidesWith(Collider other, out CollisionResult result)
         {
+            result.other = other;
             if(other is AABBCollider)
             {
                 return CollisionResolvers.AABBToAABB(this, other as AABBCollider, out result);

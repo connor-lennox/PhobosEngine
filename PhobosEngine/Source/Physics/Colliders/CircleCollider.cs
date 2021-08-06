@@ -41,6 +41,7 @@ namespace PhobosEngine
 
         public override bool CollidesWith(Collider other, out CollisionResult result)
         {
+            result.other =  other;
             if(other is CircleCollider)
             {
                 return CollisionResolvers.CircleToCircle(this, other as CircleCollider, out result);

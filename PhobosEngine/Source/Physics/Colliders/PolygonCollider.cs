@@ -97,6 +97,7 @@ namespace PhobosEngine
 
         public override bool CollidesWith(Collider other, out CollisionResult result)
         {
+            result.other = other;
             if(other is PolygonCollider)
             {
                 return CollisionResolvers.PolyToPoly(this, other as PolygonCollider, out result);
