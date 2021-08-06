@@ -1,6 +1,6 @@
 namespace PhobosEngine.Collisions
 {
-    public static class AABBCollisions
+    public static partial class CollisionResolvers
     {
         public static bool AABBToAABB(AABBCollider b1, AABBCollider b2, out CollisionResult result)
         {

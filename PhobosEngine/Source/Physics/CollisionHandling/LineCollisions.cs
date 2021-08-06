@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhobosEngine.Collisions
 {
-    public static class LineCollisions 
+    public static partial class CollisionResolvers 
     {
         public static bool LineToLine(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2, out Vector2 intersectPoint)
         {

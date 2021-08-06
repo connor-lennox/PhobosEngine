@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhobosEngine.Collisions
 {
-    public class PolygonCollisions
+    public static partial class CollisionResolvers
     {
         public static bool PolyToPoly(PolygonCollider p1, PolygonCollider p2, out CollisionResult result)
         {

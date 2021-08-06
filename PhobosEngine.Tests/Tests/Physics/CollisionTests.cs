@@ -26,7 +26,7 @@ namespace PhobosEngine.Tests
             e1.Transform.Position = new Vector2(0, 0);
             e2.Transform.Position = new Vector2(0.5f, 0.5f);
 
-            Assert.IsTrue(CircleCollisions.CircleToCircle(c1, c2, out CollisionResult result));
+            Assert.IsTrue(CollisionResolvers.CircleToCircle(c1, c2, out CollisionResult result));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace PhobosEngine.Tests
             e1.Transform.Position = new Vector2(0, 0);
             e2.Transform.Position = new Vector2(2.5f, 0.5f);
 
-            Assert.IsFalse(CircleCollisions.CircleToCircle(c1, c2, out CollisionResult result));
+            Assert.IsFalse(CollisionResolvers.CircleToCircle(c1, c2, out CollisionResult result));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace PhobosEngine.Tests
             c1.Radius = 1f;
             p2.Points = new Vector2[] {new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1)};
 
-            Assert.IsTrue(CircleCollisions.CircleToPoly(c1, p2, out CollisionResult result));
+            Assert.IsTrue(CollisionResolvers.CircleToPoly(c1, p2, out CollisionResult result));
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace PhobosEngine.Tests
             c1.Radius = 1f;
             p2.Points = new Vector2[] {new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1)};
 
-            Assert.IsFalse(CircleCollisions.CircleToPoly(c1, p2, out CollisionResult result));
+            Assert.IsFalse(CollisionResolvers.CircleToPoly(c1, p2, out CollisionResult result));
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace PhobosEngine.Tests
             c1.Radius = 1f;
             p2.Points = new Vector2[] {new Vector2(0, 0), new Vector2(5, 5), new Vector2(0, 5)};
 
-            Assert.IsTrue(CircleCollisions.CircleToPoly(c1, p2, out CollisionResult result));
+            Assert.IsTrue(CollisionResolvers.CircleToPoly(c1, p2, out CollisionResult result));
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace PhobosEngine.Tests
             p1.Points = new Vector2[] {new Vector2(0, 0), new Vector2(2, 0), new Vector2(2, 2), new Vector2(0, 2)};
             p2.Points = new Vector2[] {new Vector2(1, 1), new Vector2(3, 1), new Vector2(1, 3)};
 
-            Assert.IsTrue(PolygonCollisions.PolyToPoly(p1, p2, out CollisionResult result));
+            Assert.IsTrue(CollisionResolvers.PolyToPoly(p1, p2, out CollisionResult result));
         }
 
         [Test]
@@ -122,7 +122,7 @@ namespace PhobosEngine.Tests
             p1.Points = new Vector2[] {new Vector2(0, 0), new Vector2(2, 0), new Vector2(2, 2), new Vector2(0, 2)};
             p2.Points = new Vector2[] {new Vector2(5, 5), new Vector2(3, 5), new Vector2(5, 3)};
 
-            Assert.IsFalse(PolygonCollisions.PolyToPoly(p1, p2, out CollisionResult result));
+            Assert.IsFalse(CollisionResolvers.PolyToPoly(p1, p2, out CollisionResult result));
         }
 
         [Test]
@@ -134,7 +134,7 @@ namespace PhobosEngine.Tests
             Vector2 b1 = new Vector2(0, 2);
             Vector2 b2 = new Vector2(4, 0);
 
-            Assert.IsTrue(LineCollisions.LineToLine(a1, a2, b1, b2, out Vector2 intersect));
+            Assert.IsTrue(CollisionResolvers.LineToLine(a1, a2, b1, b2, out Vector2 intersect));
             Assert.AreEqual(new Vector2(1.2f, 1.4f), intersect);
         }
 
@@ -147,7 +147,7 @@ namespace PhobosEngine.Tests
             Vector2 b1 = new Vector2(0, 2);
             Vector2 b2 = new Vector2(1, 1.5f);
 
-            Assert.IsFalse(LineCollisions.LineToLine(a1, a2, b1, b1, out Vector2 intersect));
+            Assert.IsFalse(CollisionResolvers.LineToLine(a1, a2, b1, b1, out Vector2 intersect));
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace PhobosEngine.Tests
             Vector2 b1 = a1 + Vector2.One;
             Vector2 b2 = a2 + Vector2.One;
 
-            Assert.IsFalse(LineCollisions.LineToLine(a1, a2, b1, b2, out Vector2 intersect));
+            Assert.IsFalse(CollisionResolvers.LineToLine(a1, a2, b1, b2, out Vector2 intersect));
         }
 
         [Test]
@@ -173,7 +173,7 @@ namespace PhobosEngine.Tests
             CircleCollider circle = entity.AddComponent<CircleCollider>();
             circle.Radius = 1f;
 
-            Assert.IsTrue(LineCollisions.LineToCircle(a1, a2, circle, out RaycastHit hit));
+            Assert.IsTrue(CollisionResolvers.LineToCircle(a1, a2, circle, out RaycastHit hit));
             Assert.AreEqual(new Vector2(-1, 0), hit.normal);
             Assert.AreEqual(circle, hit.collider);
             Assert.AreEqual(new Vector2(2, 0), hit.point);
@@ -191,7 +191,7 @@ namespace PhobosEngine.Tests
             CircleCollider circle = entity.AddComponent<CircleCollider>();
             circle.Radius = 1f;
 
-            Assert.IsFalse(LineCollisions.LineToCircle(a1, a2, circle, out RaycastHit hit));
+            Assert.IsFalse(CollisionResolvers.LineToCircle(a1, a2, circle, out RaycastHit hit));
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace PhobosEngine.Tests
             AABBCollider collider = entity.AddComponent<AABBCollider>();
             collider.Size = new Vector2(2, 2);
 
-            Assert.IsTrue(LineCollisions.LineToAABB(a1, a2, collider, out RaycastHit hit));
+            Assert.IsTrue(CollisionResolvers.LineToAABB(a1, a2, collider, out RaycastHit hit));
             Assert.AreEqual(collider, hit.collider);
             Assert.AreEqual(new Vector2(-1, 0), hit.normal);
             Assert.AreEqual(new Vector2(2, 0), hit.point);
@@ -223,7 +223,7 @@ namespace PhobosEngine.Tests
             AABBCollider collider = entity.AddComponent<AABBCollider>();
             collider.Size = Vector2.One;
 
-            Assert.IsFalse(LineCollisions.LineToAABB(a1, a2, collider, out RaycastHit hit));
+            Assert.IsFalse(CollisionResolvers.LineToAABB(a1, a2, collider, out RaycastHit hit));
         }
 
         [Test]
@@ -236,7 +236,7 @@ namespace PhobosEngine.Tests
             PolygonCollider collider = entity.AddComponent<PolygonCollider>();
             collider.Points = new Vector2[] {new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 0)};
 
-            Assert.IsTrue(LineCollisions.LineToPoly(a1, a2, collider, out RaycastHit hit));
+            Assert.IsTrue(CollisionResolvers.LineToPoly(a1, a2, collider, out RaycastHit hit));
             Assert.AreEqual(collider, hit.collider);
             Assert.AreEqual(new Vector2(2, 0), hit.point);
             Assert.AreEqual(new Vector2(-1, 0), hit.normal);
@@ -253,7 +253,7 @@ namespace PhobosEngine.Tests
             PolygonCollider collider = entity.AddComponent<PolygonCollider>();
             collider.Points = new Vector2[] {new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 0)};
 
-            Assert.IsFalse(LineCollisions.LineToPoly(a1, a2, collider, out RaycastHit hit));
+            Assert.IsFalse(CollisionResolvers.LineToPoly(a1, a2, collider, out RaycastHit hit));
         }
     }
 }

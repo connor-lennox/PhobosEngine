@@ -36,7 +36,7 @@ namespace PhobosEngine
 
         public override bool LineIntersects(Vector2 start, Vector2 end, out RaycastHit hit)
         {
-            return LineCollisions.LineToCircle(start, end, this, out hit);
+            return CollisionResolvers.LineToCircle(start, end, this, out hit);
         }
 
         public override void Serialize(ISerializationWriter writer)

@@ -92,7 +92,7 @@ namespace PhobosEngine
 
         public override bool LineIntersects(Vector2 start, Vector2 end, out RaycastHit hit)
         {
-            return LineCollisions.LineToPoly(start, end, this, out hit);
+            return CollisionResolvers.LineToPoly(start, end, this, out hit);
         }
 
         public override void Serialize(ISerializationWriter writer)

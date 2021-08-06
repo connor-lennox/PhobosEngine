@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhobosEngine.Collisions
 {
-    public static class CircleCollisions
+    public static partial class CollisionResolvers
     {
         public static bool CircleToCircle(CircleCollider c1, CircleCollider c2, out CollisionResult result)
         {
