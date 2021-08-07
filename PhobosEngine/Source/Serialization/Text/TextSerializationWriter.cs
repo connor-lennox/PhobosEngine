@@ -13,6 +13,11 @@ namespace PhobosEngine.Serialization
             WriteLine(value);
         }
 
+        public new void Write(uint value)
+        {
+            WriteLine(value);
+        }
+
         public new void Write(int value)
         {
             WriteLine(value);

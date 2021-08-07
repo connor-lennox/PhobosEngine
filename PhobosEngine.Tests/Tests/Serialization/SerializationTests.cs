@@ -22,6 +22,7 @@ namespace PhobosEngine.Tests.Serialization
         private void WriteTestValues(ISerializationWriter writer)
         {
             writer.Write(TestValues.testString);
+            writer.Write(TestValues.testUInt);
             writer.Write(TestValues.testInt);
             writer.Write(TestValues.testFloat);
             writer.Write(TestValues.testDouble);
@@ -31,6 +32,7 @@ namespace PhobosEngine.Tests.Serialization
         private void ReadTestValues(ISerializationReader reader)
         {
             Assert.AreEqual(reader.ReadString(), TestValues.testString);
+            Assert.AreEqual(reader.ReadUInt(), TestValues.testUInt);
             Assert.AreEqual(reader.ReadInt(), TestValues.testInt);
             Assert.AreEqual(reader.ReadFloat(), TestValues.testFloat);
             Assert.AreEqual(reader.ReadDouble(), TestValues.testDouble);

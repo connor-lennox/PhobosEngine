@@ -18,5 +18,10 @@ namespace PhobosEngine.Serialization
                 self.Write(vecs[i]);
             }
         }
+
+        public static void Write(this ISerializationWriter self, Color color)
+        {
+            self.Write(color.PackedValue);
+        }
     }
 }

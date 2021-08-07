@@ -3,6 +3,7 @@ namespace PhobosEngine.Serialization
     public interface ISerializationWriter
     {
         void Write(string value);
+        void Write(uint value);
         void Write(int value);
         void Write(float value);
         void Write(double value);

@@ -20,5 +20,10 @@ namespace PhobosEngine.Serialization
 
             return arr;
         }
+
+        public static Color ReadColor(this ISerializationReader self)
+        {
+            return new Color(self.ReadUInt());
+        }
     }
 }

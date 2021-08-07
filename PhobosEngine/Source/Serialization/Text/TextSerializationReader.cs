@@ -22,6 +22,11 @@ namespace PhobosEngine.Serialization
             return float.Parse(ReadLine());
         }
 
+        public uint ReadUInt()
+        {
+            return uint.Parse(ReadLine());
+        }
+
         public int ReadInt()
         {
             return int.Parse(ReadLine());
