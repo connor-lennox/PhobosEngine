@@ -20,7 +20,7 @@ namespace PhobosEngine
 
         public Vector2 WorldPos => Entity.Transform.Position + Offset;
 
-        protected bool registered = false;
+        public bool Registered {get; protected set;} = false;
 
         public Collider()
         {
@@ -43,7 +43,7 @@ namespace PhobosEngine
         {
             if(this.Entity != null) {
                 RecalculateBounds();
-                if(registered)
+                if(Registered)
                 {
                     Physics.UpdateCollider(this);
                 }
@@ -53,13 +53,13 @@ namespace PhobosEngine
         public void Register()
         {
             Physics.RegisterCollider(this);
-            registered = true;
+            Registered = true;
         }
 
         public void Deregister()
         {
             Physics.RemoveCollider(this);
-            registered = false;
+            Registered = false;
         }
 
         public abstract bool LineIntersects(Vector2 start, Vector2 end, out RaycastHit hit);
