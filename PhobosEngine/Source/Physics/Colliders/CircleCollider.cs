@@ -41,20 +41,34 @@ namespace PhobosEngine
 
         public override bool CollidesWith(Collider other, out CollisionResult result)
         {
-            result.other =  other;
             if(other is CircleCollider)
             {
-                return CollisionResolvers.CircleToCircle(this, other as CircleCollider, out result);
+                if(CollisionResolvers.CircleToCircle(this, other as CircleCollider, out result))
+                {
+                    result.other = other;
+                    return true;
+                }
+                return false;
             }
 
             if(other is PolygonCollider)
             {
-                return CollisionResolvers.CircleToPoly(this, other as PolygonCollider, out result);
+                if(CollisionResolvers.CircleToPoly(this, other as PolygonCollider, out result))
+                {
+                    result.other = other;
+                    return true;
+                }
+                return false;
             }
 
             if(other is AABBCollider)
             {
-                return CollisionResolvers.CircleToAABB(this, other as AABBCollider, out result);
+                if(CollisionResolvers.CircleToAABB(this, other as AABBCollider, out result))
+                {
+                    result.other = other;
+                    return true;
+                }
+                return false;
             }
 
             throw new System.NotImplementedException($"Collisions of Circle to {other} is not supported.");

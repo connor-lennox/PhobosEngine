@@ -41,10 +41,14 @@ namespace PhobosEngine
 
         public override bool CollidesWith(Collider other, out CollisionResult result)
         {
-            result.other = other;
             if(other is AABBCollider)
             {
-                return CollisionResolvers.AABBToAABB(this, other as AABBCollider, out result);
+                if(CollisionResolvers.AABBToAABB(this, other as AABBCollider, out result))
+                {
+                    result.other = other;
+                    return true;
+                }
+                return false;
             }
 
             if(other is CircleCollider)
@@ -52,6 +56,7 @@ namespace PhobosEngine
                 if(CollisionResolvers.CircleToAABB(other as CircleCollider, this, out result))
                 {
                     result.InvertResult();
+                    result.other = other;
                     return true;
                 }
                 return false;

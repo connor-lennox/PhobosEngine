@@ -97,10 +97,14 @@ namespace PhobosEngine
 
         public override bool CollidesWith(Collider other, out CollisionResult result)
         {
-            result.other = other;
             if(other is PolygonCollider)
             {
-                return CollisionResolvers.PolyToPoly(this, other as PolygonCollider, out result);
+                if(CollisionResolvers.PolyToPoly(this, other as PolygonCollider, out result))
+                {
+                    result.other = other;
+                    return true;
+                }
+                return false;
             }
 
             if(other is CircleCollider)
@@ -108,6 +112,7 @@ namespace PhobosEngine
                 if(CollisionResolvers.CircleToPoly(other as CircleCollider, this, out result))
                 {
                     result.InvertResult();
+                    result.other = other;
                     return true;
                 }
                 return false;
