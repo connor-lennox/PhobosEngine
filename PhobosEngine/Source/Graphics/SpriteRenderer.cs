@@ -7,6 +7,8 @@ namespace PhobosEngine
     public class SpriteRenderer : Component
     {
         public Texture2D sprite;
+        public Color tintColor = Color.White;
+
         public Vector2 SpriteOrigin { get {
             return Transform.Position - new Vector2(sprite.Width * 0.5f, sprite.Height * 0.5f);
         }}
@@ -15,13 +17,21 @@ namespace PhobosEngine
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(sprite, SpriteOrigin, null, Color.White, Transform.Rotation, Vector2.Zero, Transform.Scale, SpriteEffects.None, 0);
+            batch.Draw(sprite, SpriteOrigin, null, tintColor, Transform.Rotation, Vector2.Zero, Transform.Scale, SpriteEffects.None, 0);
         }
 
         public override void Serialize(ISerializationWriter writer)
         {
             base.Serialize(writer);
             // TODO: serialize reference to sprite
+            writer.Write(tintColor);
+        }
+
+        public override void Deserialize(ISerializationReader reader)
+        {
+            base.Deserialize(reader);
+            // TODO: deserialize sprite reference
+            tintColor = reader.ReadColor();
         }
     }
 }
