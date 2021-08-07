@@ -33,19 +33,38 @@ namespace PhobosEngine
             Texture2D testPixelTexture = new Texture2D(GraphicsDevice, 20, 20);
             Color[] data = new Color[400];
             for(int i = 0; i < 400; i++) {
-                data[i] = Color.Black;
+                data[i] = Color.White;
             }
             testPixelTexture.SetData(data);
 
             testScene = new Scene();
-            GameEntity testEntity = new GameEntity();
-            testEntity.AddComponent(new SpriteRenderer());
-            testEntity.GetComponent<SpriteRenderer>().sprite = testPixelTexture;
-            testTransform = testEntity.Transform;
+
+            GameEntity testEntity1 = new GameEntity();
+            testEntity1.AddComponent(new SpriteRenderer());
+            testEntity1.GetComponent<SpriteRenderer>().sprite = testPixelTexture;
+            testTransform = testEntity1.Transform;
+            BoxCollider c1 = testEntity1.AddComponent<BoxCollider>();
+            c1.Size = new Vector2(20, 20);
+
+            CollisionTracker tracker = testEntity1.AddComponent<CollisionTracker>();
+            tracker.OnCollisionEnter += ((CollisionResult result) => testEntity1.GetComponent<SpriteRenderer>().tintColor = Color.Red);
+            tracker.OnCollisionExit += ((CollisionResult result) => testEntity1.GetComponent<SpriteRenderer>().tintColor = Color.White);
+
+            GameEntity testEntity2 = new GameEntity();
+            testEntity2.Transform.Position = new Vector2(0, 0);
+            testEntity2.AddComponent(new SpriteRenderer()).sprite = testPixelTexture;
+            testEntity2.GetComponent<SpriteRenderer>().tintColor = Color.Black;
+            BoxCollider c2 = testEntity2.AddComponent<BoxCollider>();
+            c2.Size = new Vector2(20, 20);
+
+            c1.Register();
+            c2.Register();
+
             GameEntity camEntity = new GameEntity();
             camEntity.AddComponent(new Camera());
             camEntity.GetComponent<Camera>().Bounds = GraphicsDevice.Viewport.Bounds;
-            testScene.AddEntity(testEntity);
+            testScene.AddEntity(testEntity2);
+            testScene.AddEntity(testEntity1);
             testScene.AddEntity(camEntity);
             testScene.MainCamera = camEntity.GetComponent<Camera>();
         }
@@ -56,11 +75,9 @@ namespace PhobosEngine
                 Exit();
 
             testScene.Update();
-            float x = MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds);
-            float y = MathF.Sin((float)gameTime.TotalGameTime.TotalSeconds);
-            testTransform.Position = new Vector2(x, y) * 100;
-            testTransform.PointTowards(Vector2.Zero);
-            testTransform.Scale = new Vector2(MathF.Abs(x)+.25f, MathF.Abs(y)+.25f);
+            float x = MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds * 2);
+            testTransform.Position = new Vector2(x, 0) * 50;
+            // testTransform.PointTowards(Vector2.Zero);
 
             base.Update(gameTime);
         }
