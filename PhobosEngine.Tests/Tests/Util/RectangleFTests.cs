@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using PhobosEngine;
 using PhobosEngine.Math;
 
-namespace PhobosEngine.Tests.Util
+namespace PhobosEngine.Tests.Math
 {
     [TestFixture]
     public class RectangleFTests

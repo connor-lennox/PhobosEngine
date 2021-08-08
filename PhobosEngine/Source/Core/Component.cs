@@ -33,6 +33,16 @@ namespace PhobosEngine
             return Entity.HasComponent<T>();
         }
 
+        public T AddComponent<T>() where T : Component, new()
+        {
+            return Entity.AddComponent<T>();
+        }
+
+        public T AddComponent<T>(T component) where T : Component
+        {
+            return Entity.AddComponent<T>(component);
+        }
+
         public virtual void Serialize(ISerializationWriter writer)
         {
             // Need to first serialize the real type of this Component

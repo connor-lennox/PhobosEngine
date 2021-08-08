@@ -43,6 +43,7 @@ namespace PhobosEngine
         {
             edgeNormalsDirty = true;
             effectivePoints = new Vector2[points.Length];
+
             for(int i = 0; i < points.Length; i++)
             {
                 effectivePoints[i] = PBMath.Transform(points[i], Transform.WorldTransform);

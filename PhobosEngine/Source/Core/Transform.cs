@@ -51,7 +51,7 @@ namespace PhobosEngine
             set {
                 localPosition = value;
                 positionDirty = transformDirty = true;
-                entity.TransformModified();
+                Entity.TransformModified();
             }
         }
 
@@ -64,7 +64,7 @@ namespace PhobosEngine
             set {
                 localRotation = value;
                 rotationDirty = transformDirty = true;
-                entity.TransformModified();
+                Entity.TransformModified();
             }
         }
 
@@ -77,7 +77,7 @@ namespace PhobosEngine
             set {
                 localScale = value;
                 scaleDirty = transformDirty = true;
-                entity.TransformModified();
+                Entity.TransformModified();
             }
         }
 
@@ -139,7 +139,7 @@ namespace PhobosEngine
         }
 
         // GameEntity that owns this Transform
-        private GameEntity entity;
+        public GameEntity Entity {get; private set;}
 
         public Transform(GameEntity entity) : this(entity, Vector2.Zero) {}
         public Transform(GameEntity entity, Vector2 position) : this(entity, position, 0) {}
@@ -147,7 +147,7 @@ namespace PhobosEngine
 
         public Transform(GameEntity entity, Vector2 position, float rotation, Vector2 scale)
         {
-            this.entity = entity;
+            this.Entity = entity;
             this.Position = position;
             this.Rotation = rotation;
             this.Scale = scale;
@@ -177,7 +177,7 @@ namespace PhobosEngine
             }
             positionDirty = true;
             SetDirty();
-            entity.TransformModified();
+            Entity.TransformModified();
             return this;
         }
 
@@ -191,7 +191,7 @@ namespace PhobosEngine
             }
             rotationDirty = true;
             SetDirty();
-            entity.TransformModified();
+            Entity.TransformModified();
             return this;
         }
 
@@ -205,7 +205,7 @@ namespace PhobosEngine
             }
             scaleDirty = true;
             SetDirty();
-            entity.TransformModified();
+            Entity.TransformModified();
             return this;
         }
 
@@ -242,10 +242,11 @@ namespace PhobosEngine
                 if(scaleDirty)
                 {
                     Matrix2D.CreateScale(localScale, out scaleMatrix);
+                    scaleDirty = false;
                 }
 
-                Matrix2D.Multiply(ref scaleMatrix, ref rotationMatrix, out localTransform);
-                Matrix2D.Multiply(ref localTransform, ref positionMatrix, out localTransform);
+                Matrix2D.Multiply(ref positionMatrix, ref rotationMatrix, out localTransform);
+                Matrix2D.Multiply(ref localTransform, ref scaleMatrix, out localTransform);
 
                 if(Parent == null)
                 {
@@ -292,6 +293,32 @@ namespace PhobosEngine
             LocalScale = reader.ReadVector2();
 
             transformDirty = positionDirty = rotationDirty = scaleDirty = true;
+        }
+
+        // GameEntity passthrough
+        public T GetComponent<T>() where T : Component
+        {
+            return Entity.GetComponent<T>();
+        }
+
+        public T[] GetComponents<T>() where T : Component
+        {
+            return Entity.GetComponents<T>();
+        }
+
+        public bool HasComponent<T>() where T : Component
+        {
+            return Entity.HasComponent<T>();
+        }
+    
+        public T AddComponent<T>() where T : Component, new()
+        {
+            return Entity.AddComponent<T>();
+        }
+
+        public T AddComponent<T>(T component) where T : Component
+        {
+            return Entity.AddComponent<T>(component);
         }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhobosEngine.Math
 {
-    static class PBMath
+    public static class PBMath
     {
         public static float Rad2Deg(float rad)
         {
