@@ -33,11 +33,19 @@ namespace PhobosEngine
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Texture2D testPixelTexture = new Texture2D(GraphicsDevice, 20, 20);
+            Texture2D smallPixelTexture = new Texture2D(GraphicsDevice, 4, 4);
             Color[] data = new Color[400];
             for(int i = 0; i < 400; i++) {
                 data[i] = Color.White;
             }
             testPixelTexture.SetData(data);
+
+            Color[] data2 = new Color[16];
+            for(int i = 0; i < 16; i++)
+            {
+                data2[i] = Color.White;
+            }
+            smallPixelTexture.SetData(data2);
 
             testScene = new Scene();
 
@@ -74,9 +82,9 @@ namespace PhobosEngine
             for(int i = 0; i < 4; i++)
             {
                 debugCorners[i] = new GameEntity().Transform;
-                debugCorners[i].AddComponent<SpriteRenderer>().sprite = testPixelTexture;
+                debugCorners[i].AddComponent<SpriteRenderer>().sprite = smallPixelTexture;
                 debugCorners[i].GetComponent<SpriteRenderer>().tintColor = Color.Lime;
-                debugCorners[i].Scale = new Vector2(0.2f, 0.2f);
+                // debugCorners[i].Scale = new Vector2(0.2f, 0.2f);
                 testScene.AddEntity(debugCorners[i].Entity);
             }
 
@@ -94,11 +102,11 @@ namespace PhobosEngine
                 Exit();
 
             testScene.Update();
-            float x = MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds / 4);
-            float y = MathF.Sin((float)gameTime.TotalGameTime.TotalSeconds / 4);
-            testTransform.Position = new Vector2(0, y) * 100;
+            float x = MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds / 2);
+            float y = MathF.Sin((float)gameTime.TotalGameTime.TotalSeconds / 2);
+            testTransform.Position = new Vector2(x, y) * 100;
             // testTransform.Position = new Vector2(100, 100);
-            // testTransform.PointTowards(Vector2.Zero);
+            testTransform.PointTowards(Vector2.Zero);
             // testTransform.Rotation = x;
             // testTransform.Scale = new Vector2(MathF.Abs(x)+.25f, MathF.Abs(y)+.25f);
 

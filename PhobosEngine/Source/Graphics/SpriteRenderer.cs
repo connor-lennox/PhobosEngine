@@ -9,15 +9,19 @@ namespace PhobosEngine
         public Texture2D sprite;
         public Color tintColor = Color.White;
 
-        public Vector2 SpriteOrigin { get {
-            return Transform.Position - new Vector2(sprite.Width * 0.5f, sprite.Height * 0.5f);
+        private Vector2 EffectiveSpriteSize { get {
+            return new Vector2(sprite.Width * Transform.Scale.X, sprite.Height * Transform.Scale.Y);
+        }}
+
+        private Vector2 EffectiveSpriteHalfBounds {get {
+            return new Vector2(sprite.Width * Transform.Scale.X / 2, sprite.Height * Transform.Scale.Y / 2);
         }}
 
         // TODO: sprite sorting layers
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(sprite, SpriteOrigin, null, tintColor, Transform.Rotation, Vector2.Zero, Transform.Scale, SpriteEffects.None, 0);
+            batch.Draw(sprite, Transform.Position, null, tintColor, Transform.Rotation, EffectiveSpriteHalfBounds, Transform.Scale, SpriteEffects.None, 0);
         }
 
         public override void Serialize(ISerializationWriter writer)
