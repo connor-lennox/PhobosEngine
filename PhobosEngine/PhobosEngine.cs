@@ -14,6 +14,8 @@ namespace PhobosEngine
         private Scene testScene;
         private Transform testTransform;
 
+        private Transform[] debugCorners;
+
         public PhobosEngine()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -67,6 +69,23 @@ namespace PhobosEngine
             testScene.AddEntity(testEntity1);
             testScene.AddEntity(camEntity);
             testScene.MainCamera = camEntity.GetComponent<Camera>();
+
+            debugCorners = new Transform[4];
+            for(int i = 0; i < 4; i++)
+            {
+                debugCorners[i] = new GameEntity().Transform;
+                debugCorners[i].AddComponent<SpriteRenderer>().sprite = testPixelTexture;
+                debugCorners[i].GetComponent<SpriteRenderer>().tintColor = Color.Lime;
+                debugCorners[i].Scale = new Vector2(0.2f, 0.2f);
+                testScene.AddEntity(debugCorners[i].Entity);
+            }
+
+            // GameEntity test2 = new GameEntity();
+            // test2.Transform.Parent = testTransform;
+            // test2.AddComponent<SpriteRenderer>().sprite = testPixelTexture;
+            // test2.GetComponent<SpriteRenderer>().tintColor = Color.Olive;
+            // test2.Transform.LocalPosition = new Vector2(50, 0);
+            // testScene.AddEntity(test2);
         }
 
         protected override void Update(GameTime gameTime)
@@ -75,9 +94,19 @@ namespace PhobosEngine
                 Exit();
 
             testScene.Update();
-            float x = MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds * 2);
-            testTransform.Position = new Vector2(x, 0) * 50;
+            float x = MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds / 4);
+            float y = MathF.Sin((float)gameTime.TotalGameTime.TotalSeconds / 4);
+            testTransform.Position = new Vector2(0, y) * 100;
+            // testTransform.Position = new Vector2(100, 100);
             // testTransform.PointTowards(Vector2.Zero);
+            // testTransform.Rotation = x;
+            // testTransform.Scale = new Vector2(MathF.Abs(x)+.25f, MathF.Abs(y)+.25f);
+
+            BoxCollider col = testTransform.GetComponent<BoxCollider>();
+            for(int i = 0; i < 4; i++)
+            {
+                debugCorners[i].Position = col.EffectivePoints[i];
+            }
 
             base.Update(gameTime);
         }
