@@ -177,7 +177,7 @@ namespace PhobosEngine
             }
             positionDirty = true;
             SetDirty();
-            Entity.TransformModified();
+            // Entity.TransformModified();
             return this;
         }
 
@@ -191,7 +191,7 @@ namespace PhobosEngine
             }
             rotationDirty = true;
             SetDirty();
-            Entity.TransformModified();
+            // Entity.TransformModified();
             return this;
         }
 
@@ -205,7 +205,7 @@ namespace PhobosEngine
             }
             scaleDirty = true;
             SetDirty();
-            Entity.TransformModified();
+            // Entity.TransformModified();
             return this;
         }
 
@@ -216,6 +216,7 @@ namespace PhobosEngine
             {
                 child.SetDirty();
             }
+            Entity.TransformModified();
         }
 
         private void UpdateTransform()
@@ -255,7 +256,7 @@ namespace PhobosEngine
                     rotation = localRotation;
                     scale = localScale;
                 } else {
-                    Matrix2D.Multiply(ref localTransform, ref Parent.worldTransform, out worldTransform);
+                    Matrix2D.Multiply(ref Parent.worldTransform, ref localTransform, out worldTransform);
                     PBMath.Transform(ref localPosition, ref Parent.worldTransform, out position);
                     rotation = localRotation + Parent.rotation;
                     scale = localScale * Parent.scale;

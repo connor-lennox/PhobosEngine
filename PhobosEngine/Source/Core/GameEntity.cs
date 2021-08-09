@@ -118,6 +118,7 @@ namespace PhobosEngine
 
         public void TransformModified()
         {
+            // Alert components that we changed
             foreach(Component component in components)
             {
                 component.OnParentTransformModified();
