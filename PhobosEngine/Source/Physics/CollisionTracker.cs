@@ -10,40 +10,38 @@ namespace PhobosEngine
         private Dictionary<Collider, CollisionResult> prevCollisions = new Dictionary<Collider, CollisionResult>();
         private Dictionary<Collider, CollisionResult> newCollisions = new Dictionary<Collider, CollisionResult>();
 
-        private HashSet<Collider> enteredColliders = new HashSet<Collider>();
-        private HashSet<Collider> exitedColliders = new HashSet<Collider>();
 
-        private Collider targetCollider;
+        private Collider[] targetColliders;
 
         public override void Init()
         {
-            targetCollider = GetComponent<Collider>();
+            targetColliders = GetComponents<Collider>();
         }
 
         public override void OnParentTransformModified()
         {
-            // TODO: is it possible that this could be called before the collider updates?
-            //       enforce this function called in order of components added?
-            if(targetCollider.Registered)
-            {
-                ResolveCollisions();
-            }
+            ResolveCollisions();
         }
 
         public void ResolveCollisions()
         {
             // Prep structures
-            enteredColliders.Clear();
-            exitedColliders.Clear();
             newCollisions.Clear();
 
             // Broad + Narrow phase detection
-            HashSet<Collider> nearbyColliders = Physics.BroadphaseAABBExcludeSelf(targetCollider.Bounds, targetCollider);
-            foreach(Collider other in nearbyColliders)
+            // Iterate through all colliders on this object (only at the root level)
+            foreach(Collider source in targetColliders)
             {
-                if(targetCollider.CollidesWith(other, out CollisionResult result))
+                if(source.Registered)
                 {
-                    newCollisions.Add(other, result);
+                    HashSet<Collider> nearbyColliders = Physics.BroadphaseAABBExcludeSelf(source.Bounds, source);
+                    foreach(Collider other in nearbyColliders)
+                    {
+                        if(source.CollidesWith(other, out CollisionResult result))
+                        {
+                            newCollisions.Add(other, result);
+                        }
+                    }
                 }
             }
 
@@ -53,7 +51,6 @@ namespace PhobosEngine
                 if(!prevCollisions.ContainsKey(collision.Key))
                 {
                     OnCollisionEnter.Invoke(collision.Value);
-                    enteredColliders.Add(collision.Key);
                 }
             }
 
@@ -63,20 +60,14 @@ namespace PhobosEngine
                 if(!newCollisions.ContainsKey(oldCollision.Key))
                 {
                     OnCollisionExit.Invoke(oldCollision.Value);
-                    exitedColliders.Add(oldCollision.Key);
                 }
             }
 
-            // Store the new collisions for use next time
-            foreach(Collider collider in enteredColliders)
+
+            prevCollisions.Clear();
+            foreach(Collider collider in newCollisions.Keys)
             {
                 prevCollisions.Add(collider, newCollisions[collider]);
-            }
-
-            // Remove exited collisions
-            foreach(Collider collider in exitedColliders)
-            {
-                prevCollisions.Remove(collider);
             }
         }
     }
