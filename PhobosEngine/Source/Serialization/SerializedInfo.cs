@@ -5,12 +5,12 @@ namespace PhobosEngine.Serialization
     public class SerializedInfo
     {
         // The "store" here is a dict of string (key) to {string, string[], SerializedInfo, SerializedInfo[]} (value)
-        private Dictionary<string, object> store = new Dictionary<string, object>();
+        public Dictionary<string, object> Store {get; private set;} = new Dictionary<string, object>();
 
         // Writing primitive values:
         public void Write(string key, string value)
         {
-            store[key] = value;
+            Store[key] = value;
         }
 
         public void Write(string key, int value) => Write(key, value.ToString());
@@ -22,7 +22,7 @@ namespace PhobosEngine.Serialization
         // Reading primitive values:
         public string ReadString(string key)
         {
-            return store[key] as string;
+            return Store[key] as string;
         }
 
         public int ReadInt(string key) => int.Parse(ReadString(key));
@@ -31,25 +31,41 @@ namespace PhobosEngine.Serialization
         public double ReadDouble(string key) => double.Parse(ReadString(key));
         public bool ReadBool(string key) => bool.Parse(ReadString(key));
 
+        // Read/Write arrays
+        public void Write(string key, string[] arr)
+        {
+            Store[key] = arr;
+        }
+
+        public string[] ReadStringArray(string key)
+        {
+            return Store[key] as string[] ?? new string[0];
+        }
+
         // Read/Write recursively
         public void Write(string key, SerializedInfo childInfo)
         {
-            store[key] = childInfo;
+            Store[key] = childInfo;
         }
 
         public SerializedInfo ReadSerializedInfo(string key)
         {
-            return store[key] as SerializedInfo;
+            return Store[key] as SerializedInfo;
         }
 
         public void Write(string key, SerializedInfo[] childInfos)
         {
-            store[key] = childInfos;
+            Store[key] = childInfos;
         }
 
         public SerializedInfo[] ReadSerializedInfoArray(string key)
         {
-            return store[key] as SerializedInfo[];
+            return Store[key] as SerializedInfo[] ?? new SerializedInfo[0];
+        }
+
+        public void WriteEmptyArray(string key)
+        {
+            Store[key] = new object[0];
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.Json;
 using NUnit.Framework;
 
 using Microsoft.Xna.Framework;
@@ -70,8 +71,7 @@ namespace PhobosEngine.Tests.Serialization
         //     Assert.AreEqual(newEntity.Transform.Position, pos);
         // }
 
-        [Test]
-        public void SimpleTypes_SerializedInfo_ContainsCorrectValues()
+        private TestValueHolder ConstructTestHolder()
         {
             TestValueHolder holder = new TestValueHolder();
             holder.mUInt = TestValues.testUInt;
@@ -80,18 +80,30 @@ namespace PhobosEngine.Tests.Serialization
             holder.mDouble = TestValues.testDouble;
             holder.mBool = TestValues.testBool;
             holder.mString = TestValues.testString;
+            return holder;
+        }
+
+        private void CheckTestHolder(TestValueHolder holder)
+        {
+            Assert.AreEqual(holder.mString, TestValues.testString);
+            Assert.AreEqual(holder.mUInt, TestValues.testUInt);
+            Assert.AreEqual(holder.mInt, TestValues.testInt);
+            Assert.AreEqual(holder.mFloat, TestValues.testFloat);
+            Assert.AreEqual(holder.mDouble, TestValues.testDouble);
+            Assert.AreEqual(holder.mBool, TestValues.testBool);
+        }
+
+        [Test]
+        public void SimpleTypes_SerializedInfo_ContainsCorrectValues()
+        {
+            TestValueHolder holder = ConstructTestHolder();
 
             SerializedInfo info = holder.Serialize();
 
             TestValueHolder holderCopy = new TestValueHolder();
             holderCopy.Deserialize(info);
 
-            Assert.AreEqual(holderCopy.mString, TestValues.testString);
-            Assert.AreEqual(holderCopy.mUInt, TestValues.testUInt);
-            Assert.AreEqual(holderCopy.mInt, TestValues.testInt);
-            Assert.AreEqual(holderCopy.mFloat, TestValues.testFloat);
-            Assert.AreEqual(holderCopy.mDouble, TestValues.testDouble);
-            Assert.AreEqual(holderCopy.mBool, TestValues.testBool);
+            CheckTestHolder(holderCopy);
         }
 
         [Test]
@@ -105,6 +117,63 @@ namespace PhobosEngine.Tests.Serialization
 
             GameEntity newEntity = new GameEntity();
             newEntity.Deserialize(info);
+
+            Assert.AreEqual(newEntity.Transform.Position, pos);
+        }
+
+        [Test]
+        public void SimpleTypes_SerializedInfo_WritesToJSON()
+        {
+            TestValueHolder holder = ConstructTestHolder();
+            SerializedInfo holderInfo = holder.Serialize();
+
+            MemoryStream stream = new MemoryStream();
+            Utf8JsonWriter writer = new Utf8JsonWriter(stream);
+            JsonSerializerOptions options = new JsonSerializerOptions {
+                WriteIndented = true,
+                Converters = {new SerializedInfoJsonConverter()}
+            };
+            JsonSerializer.Serialize<SerializedInfo>(writer, holderInfo, options);
+            writer.Flush();
+
+            stream.Position = 0;
+            Utf8JsonReader reader = new Utf8JsonReader(stream.ToArray());
+            SerializedInfo readInfo = JsonSerializer.Deserialize<SerializedInfo>(ref reader, options);
+
+            TestValueHolder holderCopy = new TestValueHolder();
+            holderCopy.Deserialize(readInfo);
+
+            CheckTestHolder(holderCopy);
+        }
+
+        [Test]
+        public void DefautGameEntity_SerializedInfo_WritesToJSON()
+        {
+            GameEntity oldEntity = new GameEntity();
+            Vector2 pos = new Vector2(4, 5);
+            oldEntity.Transform.Position = pos;
+
+            SerializedInfo info = oldEntity.Serialize();
+
+            MemoryStream stream = new MemoryStream();
+            Utf8JsonWriter writer = new Utf8JsonWriter(stream);
+            JsonSerializerOptions options = new JsonSerializerOptions {
+                WriteIndented = true,
+                Converters = {new SerializedInfoJsonConverter()}
+            };
+            JsonSerializer.Serialize<SerializedInfo>(writer, info, options);
+            writer.Flush();
+
+            stream.Position = 0;
+            Console.Write(System.Text.Encoding.UTF8.GetString(stream.ToArray()));
+
+            stream.Position = 0;
+            Utf8JsonReader reader = new Utf8JsonReader(stream.ToArray());
+            SerializedInfo readInfo = JsonSerializer.Deserialize<SerializedInfo>(ref reader, options);
+
+
+            GameEntity newEntity = new GameEntity();
+            newEntity.Deserialize(readInfo);
 
             Assert.AreEqual(newEntity.Transform.Position, pos);
         }
