@@ -93,55 +93,24 @@ namespace PhobosEngine.Tests.Serialization
             Assert.AreEqual(holder.mBool, TestValues.testBool);
         }
 
-        [Test]
-        public void SimpleTypes_SerializedInfo_ContainsCorrectValues()
-        {
-            TestValueHolder holder = ConstructTestHolder();
-
-            SerializedInfo info = holder.Serialize();
-
-            TestValueHolder holderCopy = new TestValueHolder();
-            holderCopy.Deserialize(info);
-
-            CheckTestHolder(holderCopy);
-        }
-
-        [Test]
-        public void DefaultGameEntity_SerializedInfo_ContainsCorrectValues()
-        {
-            GameEntity oldEntity = new GameEntity();
-            Vector2 pos = new Vector2(4, 5);
-            oldEntity.Transform.Position = pos;
-
-            SerializedInfo info = oldEntity.Serialize();
-
-            GameEntity newEntity = new GameEntity();
-            newEntity.Deserialize(info);
-
-            Assert.AreEqual(newEntity.Transform.Position, pos);
-        }
 
         [Test]
         public void SimpleTypes_SerializedInfo_WritesToJSON()
         {
             TestValueHolder holder = ConstructTestHolder();
-            SerializedInfo holderInfo = holder.Serialize();
 
             MemoryStream stream = new MemoryStream();
             Utf8JsonWriter writer = new Utf8JsonWriter(stream);
-            JsonSerializerOptions options = new JsonSerializerOptions {
-                WriteIndented = true,
-                Converters = {new SerializedInfoJsonConverter()}
-            };
-            JsonSerializer.Serialize<SerializedInfo>(writer, holderInfo, options);
+            writer.WriteSerializableValue(holder);
             writer.Flush();
 
             stream.Position = 0;
-            Utf8JsonReader reader = new Utf8JsonReader(stream.ToArray());
-            SerializedInfo readInfo = JsonSerializer.Deserialize<SerializedInfo>(ref reader, options);
+            string jsonString = System.Text.Encoding.UTF8.GetString(stream.ToArray());
+
+            JsonElement root = JsonDocument.Parse(jsonString).RootElement;
 
             TestValueHolder holderCopy = new TestValueHolder();
-            holderCopy.Deserialize(readInfo);
+            holderCopy.Deserialize(root);
 
             CheckTestHolder(holderCopy);
         }
@@ -153,27 +122,19 @@ namespace PhobosEngine.Tests.Serialization
             Vector2 pos = new Vector2(4, 5);
             oldEntity.Transform.Position = pos;
 
-            SerializedInfo info = oldEntity.Serialize();
-
             MemoryStream stream = new MemoryStream();
             Utf8JsonWriter writer = new Utf8JsonWriter(stream);
-            JsonSerializerOptions options = new JsonSerializerOptions {
-                WriteIndented = true,
-                Converters = {new SerializedInfoJsonConverter()}
-            };
-            JsonSerializer.Serialize<SerializedInfo>(writer, info, options);
+            
+            writer.WriteSerializableValue(oldEntity);
             writer.Flush();
 
             stream.Position = 0;
-            Console.Write(System.Text.Encoding.UTF8.GetString(stream.ToArray()));
+            string jsonString = System.Text.Encoding.UTF8.GetString(stream.ToArray());
 
-            stream.Position = 0;
-            Utf8JsonReader reader = new Utf8JsonReader(stream.ToArray());
-            SerializedInfo readInfo = JsonSerializer.Deserialize<SerializedInfo>(ref reader, options);
-
+            JsonElement root = JsonDocument.Parse(jsonString).RootElement;
 
             GameEntity newEntity = new GameEntity();
-            newEntity.Deserialize(readInfo);
+            newEntity.Deserialize(root);
 
             Assert.AreEqual(newEntity.Transform.Position, pos);
         }

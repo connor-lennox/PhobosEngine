@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 using PhobosEngine.Math;
 using PhobosEngine.Serialization;
@@ -122,17 +123,28 @@ namespace PhobosEngine
             throw new NotImplementedException($"Collisions of Polygon to {other} is not supported.");
         }
 
-        public override SerializedInfo Serialize()
+        public override void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = base.Serialize();
-            info.Write("points", points);
-            return info;
+            base.Serialize(writer);
+            writer.WriteStartArray("points");
+            foreach(Vector2 point in points)
+            {
+                writer.WriteVector2Value(point);
+            }
         }
 
-        public override void Deserialize(SerializedInfo info)
+        public override void Deserialize(JsonElement json)
         {
-            base.Deserialize(info);
-            Points = info.ReadVector2Array("points");
+            base.Deserialize(json);
+            JsonElement pointsArrElem = json.GetProperty("points");
+            points = new Vector2[pointsArrElem.GetArrayLength()];
+            int i = 0;
+            foreach(JsonElement pointElem in pointsArrElem.EnumerateArray())
+            {
+                points[i] = pointElem.GetVector2();
+                i++;
+            }
+            UpdateCollider();
         }
     }
 }

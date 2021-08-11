@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using PhobosEngine.Serialization;
 
 namespace PhobosEngine.Tests.Serialization
@@ -21,26 +23,24 @@ namespace PhobosEngine.Tests.Serialization
         public bool mBool;
         public string mString;
 
-        public SerializedInfo Serialize()
+        public void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = new SerializedInfo();
-            info.Write("mUInt", mUInt);
-            info.Write("mInt", mInt);
-            info.Write("mFloat", mFloat);
-            info.Write("mDouble", mDouble);
-            info.Write("mBool", mBool);
-            info.Write("mString", mString);
-            return info;
+            writer.WriteNumber("mUInt", mUInt);
+            writer.WriteNumber("mInt", mInt);
+            writer.WriteNumber("mFloat", mFloat);
+            writer.WriteNumber("mDouble", mDouble);
+            writer.WriteBoolean("mBool", mBool);
+            writer.WriteString("mString", mString);
         }
 
-        public void Deserialize(SerializedInfo info)
+        public void Deserialize(JsonElement json)
         {
-            mUInt = info.ReadUInt("mUInt");
-            mInt = info.ReadInt("mInt");
-            mFloat = info.ReadFloat("mFloat");
-            mDouble = info.ReadDouble("mDouble");
-            mBool = info.ReadBool("mBool");
-            mString = info.ReadString("mString");
+            mUInt = json.GetProperty("mUInt").GetUInt32();
+            mInt = json.GetProperty("mInt").GetInt32();
+            mFloat = json.GetProperty("mFloat").GetSingle();
+            mDouble = json.GetProperty("mDouble").GetDouble();
+            mBool = json.GetProperty("mBool").GetBoolean();
+            mString = json.GetProperty("mString").GetString();
         }
     }
 }

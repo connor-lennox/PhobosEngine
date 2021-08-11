@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
 
@@ -61,17 +62,16 @@ namespace PhobosEngine
             edgeNormals[1] = Vector2.Normalize(PBMath.Perpendicular(ref points[1], ref points[2]));
         }
 
-        public override SerializedInfo Serialize()
+        public override void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = base.Serialize();
-            info.Write("size", Size);
-            return info;
+            base.Serialize(writer);
+            writer.WriteVector2("size", Size);
         }
 
-        public override void Deserialize(SerializedInfo info)
+        public override void Deserialize(JsonElement json)
         {
-            base.Deserialize(info);
-            Size = info.ReadVector2("size");
+            base.Deserialize(json);
+            Size = json.GetProperty("size").GetVector2();
         }
     }
 }

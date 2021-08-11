@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PhobosEngine.Serialization;
@@ -24,19 +25,18 @@ namespace PhobosEngine
             batch.Draw(sprite, Transform.Position, null, tintColor, Transform.Rotation, EffectiveSpriteHalfBounds, Transform.Scale, SpriteEffects.None, 0);
         }
 
-        public override SerializedInfo Serialize()
+        public override void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = base.Serialize();
+            base.Serialize(writer);
             // TODO: serialize reference to sprite
-            info.Write("tintColor", tintColor);
-            return info;
+            writer.WriteColor("tintColor", tintColor);
         }
 
-        public override void Deserialize(SerializedInfo info)
+        public override void Deserialize(JsonElement json)
         {
-            base.Deserialize(info);
+            base.Deserialize(json);
             // TODO: deserialize sprite reference
-            tintColor = info.ReadColor("tintColor");
+            tintColor = json.GetProperty("tintColor").GetColor();
         }
     }
 }

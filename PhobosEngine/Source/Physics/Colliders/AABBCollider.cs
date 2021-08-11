@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 
 using PhobosEngine.Math;
@@ -65,17 +66,16 @@ namespace PhobosEngine
             throw new System.NotImplementedException($"Collisions of AABB to {other} are not supported.");
         }
 
-        public override SerializedInfo Serialize()
+        public override void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = base.Serialize();
-            info.Write("size", size);
-            return info;
+            base.Serialize(writer);
+            writer.WriteVector2("size", size);
         }
 
-        public override void Deserialize(SerializedInfo info)
+        public override void Deserialize(JsonElement json)
         {
-            base.Deserialize(info);
-            Size = info.ReadVector2("size");
+            base.Deserialize(json);
+            Size = json.GetProperty("size").GetVector2();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 
 using PhobosEngine.Serialization;
@@ -280,20 +281,18 @@ namespace PhobosEngine
             Rotation = MathF.Atan2(target.Y - Position.Y, target.X - Position.X);
         }
 
-        public SerializedInfo Serialize()
+        public void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = new SerializedInfo();
-            info.Write("localPosition", LocalPosition);
-            info.Write("localRotation", LocalRotation);
-            info.Write("localScale", LocalScale);
-            return info;
+            writer.WriteVector2("localPosition", LocalPosition);
+            writer.WriteNumber("localRotation", LocalRotation);
+            writer.WriteVector2("localScale", LocalScale);
         }
 
-        public void Deserialize(SerializedInfo info)
+        public void Deserialize(JsonElement json)
         {
-            LocalPosition = info.ReadVector2("localPosition");
-            LocalRotation = info.ReadFloat("localRotation");
-            LocalScale = info.ReadVector2("localScale");
+            LocalPosition = json.GetProperty("localPosition").GetVector2();
+            LocalRotation = json.GetProperty("localRotation").GetSingle();
+            LocalScale = json.GetProperty("localScale").GetVector2();
 
             transformDirty = positionDirty = rotationDirty = scaleDirty = true;
         }

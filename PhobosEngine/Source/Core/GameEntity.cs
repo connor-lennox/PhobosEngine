@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 using PhobosEngine.Serialization;
 
@@ -125,29 +126,22 @@ namespace PhobosEngine
             }
         }
 
-        public SerializedInfo Serialize()
+        public void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = new SerializedInfo();
-            info.Write("id", Id);
-            info.Write("transform", Transform.Serialize());
-            SerializedInfo[] componentInfos = new SerializedInfo[components.Count];
-            for(int i = 0; i < components.Count; i++)
-            {
-                componentInfos[i] = components[i].Serialize();
-            }
-            info.Write("components", componentInfos);
-            return info;
+            writer.WriteNumber("id", Id);
+            writer.WriteSerializable("transform", Transform);
+            writer.WriteSerializableArray("components", components.ToArray());
         }
 
-        public void Deserialize(SerializedInfo info)
+        public void Deserialize(JsonElement json)
         {
-            Id = info.ReadUInt("id");
-            Transform.Deserialize(info.ReadSerializedInfo("transform"));
+            Id = json.GetProperty("id").GetUInt32();
+            Transform.Deserialize(json.GetProperty("transform"));
             ClearComponents();
-            SerializedInfo[] componentInfos = info.ReadSerializedInfoArray("components");
-            for(int i = 0; i < componentInfos.Length; i++)
+            
+            foreach(JsonElement compElem in json.GetProperty("components").EnumerateArray())
             {
-                components.Add(Component.DeserializeInstance(componentInfos[i]));
+                components.Add(Component.DeserializeInstance(compElem));
             }
         }
     }

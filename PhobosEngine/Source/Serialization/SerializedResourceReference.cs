@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Text.Json;
 using Microsoft.Xna.Framework.Content;
 
 namespace PhobosEngine.Serialization
@@ -13,16 +14,19 @@ namespace PhobosEngine.Serialization
             return manager.Load<T>(pathToResource);
         }
 
-        public SerializedInfo Serialize()
+        public void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = new SerializedInfo();
-            info.Write("resourcePath", pathToResource);
-            return info;
+            writer.WriteString("resourcePath", pathToResource);
         }
 
-        public void Deserialize(SerializedInfo info)
+        public void Deserialize(JsonElement json)
         {
-            pathToResource = info.ReadString("resourcePath");
+            if(json.TryGetProperty("resourcePath", out JsonElement elem))
+            {
+                pathToResource = json.GetProperty("resourcePath").GetString();
+            } else {
+                pathToResource = "";
+            }
         }
 
     }

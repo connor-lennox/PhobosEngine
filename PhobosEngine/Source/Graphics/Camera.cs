@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
 
@@ -42,22 +43,22 @@ namespace PhobosEngine
                     Matrix.CreateTranslation(new Vector3(Bounds.Width * 0.5f, Bounds.Height * 0.5f, 0));
         }
 
-        public override SerializedInfo Serialize()
+        public override void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = base.Serialize();
-            info.Write("zoom", Zoom);
-            info.Write("boundsX", Bounds.X);
-            info.Write("boundsY", Bounds.Y);
-            info.Write("boundsWidth", Bounds.Width);
-            info.Write("boundsHeight", Bounds.Height);
-            return info;
+            base.Serialize(writer);
+            writer.WriteNumber("zoom", Zoom);
+            writer.WriteNumber("boundsX", Bounds.X);
+            writer.WriteNumber("boundsY", Bounds.Y);
+            writer.WriteNumber("boundsWidth", Bounds.Width);
+            writer.WriteNumber("boundsHeight", Bounds.Height);
         }
 
-        public override void Deserialize(SerializedInfo info)
+        public override void Deserialize(JsonElement json)
         {
-            base.Deserialize(info);
-            Zoom = info.ReadFloat("zoom");
-            Bounds = new Rectangle(info.ReadInt("boundsX"), info.ReadInt("boundsY"), info.ReadInt("boundsWidth"), info.ReadInt("boundsHeight"));
+            base.Deserialize(json);
+            Zoom = json.GetProperty("zoom").GetSingle();
+            Bounds = new Rectangle(json.GetProperty("boundsX").GetInt32(), json.GetProperty("boundsY").GetInt32(), 
+                                    json.GetProperty("boundsWidth").GetInt32(), json.GetProperty("boundsHeight").GetInt32());
             UpdateRenderMatrix();
         }
     }

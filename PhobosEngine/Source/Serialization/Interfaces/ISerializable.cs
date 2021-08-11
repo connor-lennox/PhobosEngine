@@ -1,8 +1,10 @@
+using System.Text.Json;
+
 namespace PhobosEngine.Serialization
 {
     public interface ISerializable
     {
-        SerializedInfo Serialize();
-        void Deserialize(SerializedInfo info);
+        void Serialize(Utf8JsonWriter writer);
+        void Deserialize(JsonElement json);
     }
 }

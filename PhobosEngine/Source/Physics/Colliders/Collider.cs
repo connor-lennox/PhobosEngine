@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
 using PhobosEngine.Math;
@@ -65,17 +66,16 @@ namespace PhobosEngine
         public abstract bool LineIntersects(Vector2 start, Vector2 end, out RaycastHit hit);
         public abstract bool CollidesWith(Collider other, out CollisionResult result);
 
-        public override SerializedInfo Serialize()
+        public override void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = base.Serialize();
-            info.Write("offset", Offset);
-            return info;
+            base.Serialize(writer);
+            writer.WriteVector2("offset", Offset);
         }
 
-        public override void Deserialize(SerializedInfo info)
+        public override void Deserialize(JsonElement json)
         {
-            base.Deserialize(info);
-            Offset = info.ReadVector2("offset");
+            base.Deserialize(json);
+            Offset = json.GetProperty("offset").GetVector2();
         }
     }
 }

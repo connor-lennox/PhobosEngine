@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 using PhobosEngine.Serialization;
 using PhobosEngine.Math;
@@ -74,17 +75,16 @@ namespace PhobosEngine
             throw new System.NotImplementedException($"Collisions of Circle to {other} is not supported.");
         }
 
-        public override SerializedInfo Serialize()
+        public override void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = base.Serialize();
-            info.Write("radius", Radius);
-            return info;
+            base.Serialize(writer);
+            writer.WriteNumber("radius", Radius);
         }
 
-        public override void Deserialize(SerializedInfo info)
+        public override void Deserialize(JsonElement json)
         {
-            base.Deserialize(info);
-            Radius = info.ReadFloat("radius");
+            base.Deserialize(json);
+            Radius = json.GetProperty("radius").GetSingle();
         }
     }
 }

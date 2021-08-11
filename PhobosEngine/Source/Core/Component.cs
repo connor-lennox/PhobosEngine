@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 
 using PhobosEngine.Serialization;
 
@@ -43,32 +44,28 @@ namespace PhobosEngine
             return Entity.AddComponent<T>(component);
         }
 
-        public virtual SerializedInfo Serialize()
+        public virtual void Serialize(Utf8JsonWriter writer)
         {
-            SerializedInfo info = new SerializedInfo();
-
             // Need to first serialize the real type of this Component
-            info.Write("type", GetType().AssemblyQualifiedName);
+            writer.WriteString("type", GetType().AssemblyQualifiedName);
 
             // Are we active or not?
-            info.Write("active", Active);
-
-            return info;
+            writer.WriteBoolean("active", Active);
         }
 
-        public virtual void Deserialize(SerializedInfo info)
+        public virtual void Deserialize(JsonElement json)
         {
             // Whatever is deserializing us has already extracted our type, so that line is gone
             // Just need to grab if we're active or not
-            Active = info.ReadBool("active");
+            Active = json.GetProperty("active").GetBoolean();
         }
 
-        public static Component DeserializeInstance(SerializedInfo info)
+        public static Component DeserializeInstance(JsonElement json)
         {
-            string typeString = info.ReadString("type");
+            string typeString = json.GetProperty("type").GetString();
             Type type = Type.GetType(typeString);
             Component component = Activator.CreateInstance(type) as Component;
-            component.Deserialize(info);
+            component.Deserialize(json);
             return component;
         }
     }
