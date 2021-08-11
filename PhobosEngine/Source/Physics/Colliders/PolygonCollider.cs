@@ -122,16 +122,17 @@ namespace PhobosEngine
             throw new NotImplementedException($"Collisions of Polygon to {other} is not supported.");
         }
 
-        public override void Serialize(ISerializationWriter writer)
+        public override SerializedInfo Serialize()
         {
-            base.Serialize(writer);
-            writer.Write(points);
+            SerializedInfo info = base.Serialize();
+            info.Write("points", points);
+            return info;
         }
 
-        public override void Deserialize(ISerializationReader reader)
+        public override void Deserialize(SerializedInfo info)
         {
-            base.Deserialize(reader);
-            Points = reader.ReadVector2Array();
+            base.Deserialize(info);
+            Points = info.ReadVector2Array("points");
         }
     }
 }

@@ -21,7 +21,7 @@ namespace PhobosEngine.Serialization
 
         public static void ReadSerializableInto(this ISerializationReader self, ISerializable serializable)
         {
-            serializable.Deserialize(self);
+            // serializable.Deserialize(self);
         }
     }
 }

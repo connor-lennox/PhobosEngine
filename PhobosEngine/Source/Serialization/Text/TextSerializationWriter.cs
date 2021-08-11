@@ -40,7 +40,7 @@ namespace PhobosEngine.Serialization
 
         public void Write(ISerializable value)
         {
-            value.Serialize(this);
+            // value.Serialize(this);
         }
     }
 }

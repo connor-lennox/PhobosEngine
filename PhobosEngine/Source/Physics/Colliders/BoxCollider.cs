@@ -61,16 +61,17 @@ namespace PhobosEngine
             edgeNormals[1] = Vector2.Normalize(PBMath.Perpendicular(ref points[1], ref points[2]));
         }
 
-        public override void Serialize(ISerializationWriter writer)
+        public override SerializedInfo Serialize()
         {
-            base.Serialize(writer);
-            writer.Write(Size);
+            SerializedInfo info = base.Serialize();
+            info.Write("size", Size);
+            return info;
         }
 
-        public override void Deserialize(ISerializationReader reader)
+        public override void Deserialize(SerializedInfo info)
         {
-            base.Deserialize(reader);
-            Size = reader.ReadVector2();
+            base.Deserialize(info);
+            Size = info.ReadVector2("size");
         }
     }
 }

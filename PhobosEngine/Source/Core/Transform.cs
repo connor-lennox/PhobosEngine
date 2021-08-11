@@ -280,18 +280,20 @@ namespace PhobosEngine
             Rotation = MathF.Atan2(target.Y - Position.Y, target.X - Position.X);
         }
 
-        public void Serialize(ISerializationWriter writer)
+        public SerializedInfo Serialize()
         {
-            writer.Write(LocalPosition);
-            writer.Write(LocalRotation);
-            writer.Write(LocalScale);
+            SerializedInfo info = new SerializedInfo();
+            info.Write("localPosition", LocalPosition);
+            info.Write("localRotation", LocalRotation);
+            info.Write("localScale", LocalScale);
+            return info;
         }
 
-        public void Deserialize(ISerializationReader reader)
+        public void Deserialize(SerializedInfo info)
         {
-            LocalPosition = reader.ReadVector2();
-            LocalRotation = reader.ReadFloat();
-            LocalScale = reader.ReadVector2();
+            LocalPosition = info.ReadVector2("localPosition");
+            LocalRotation = info.ReadFloat("localRotation");
+            LocalScale = info.ReadVector2("localScale");
 
             transformDirty = positionDirty = rotationDirty = scaleDirty = true;
         }

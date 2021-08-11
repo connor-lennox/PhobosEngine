@@ -74,16 +74,17 @@ namespace PhobosEngine
             throw new System.NotImplementedException($"Collisions of Circle to {other} is not supported.");
         }
 
-        public override void Serialize(ISerializationWriter writer)
+        public override SerializedInfo Serialize()
         {
-            base.Serialize(writer);
-            writer.Write(Radius);
+            SerializedInfo info = base.Serialize();
+            info.Write("radius", Radius);
+            return info;
         }
 
-        public override void Deserialize(ISerializationReader reader)
+        public override void Deserialize(SerializedInfo info)
         {
-            base.Deserialize(reader);
-            Radius = reader.ReadFloat();
+            base.Deserialize(info);
+            Radius = info.ReadFloat("radius");
         }
     }
 }

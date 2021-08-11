@@ -65,16 +65,17 @@ namespace PhobosEngine
         public abstract bool LineIntersects(Vector2 start, Vector2 end, out RaycastHit hit);
         public abstract bool CollidesWith(Collider other, out CollisionResult result);
 
-        public override void Serialize(ISerializationWriter writer)
+        public override SerializedInfo Serialize()
         {
-            base.Serialize(writer);
-            writer.Write(Offset);
+            SerializedInfo info = base.Serialize();
+            info.Write("offset", Offset);
+            return info;
         }
 
-        public override void Deserialize(ISerializationReader reader)
+        public override void Deserialize(SerializedInfo info)
         {
-            base.Deserialize(reader);
-            Offset = reader.ReadVector2();
+            base.Deserialize(info);
+            Offset = info.ReadVector2("offset");
         }
     }
 }

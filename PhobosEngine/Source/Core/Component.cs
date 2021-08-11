@@ -43,28 +43,32 @@ namespace PhobosEngine
             return Entity.AddComponent<T>(component);
         }
 
-        public virtual void Serialize(ISerializationWriter writer)
+        public virtual SerializedInfo Serialize()
         {
+            SerializedInfo info = new SerializedInfo();
+
             // Need to first serialize the real type of this Component
-            writer.Write(GetType().AssemblyQualifiedName);
+            info.Write("type", GetType().AssemblyQualifiedName);
 
             // Are we active or not?
-            writer.Write(Active);
+            info.Write("active", Active);
+
+            return info;
         }
 
-        public virtual void Deserialize(ISerializationReader reader)
+        public virtual void Deserialize(SerializedInfo info)
         {
             // Whatever is deserializing us has already extracted our type, so that line is gone
             // Just need to grab if we're active or not
-            Active = reader.ReadBool();
+            Active = info.ReadBool("active");
         }
 
-        public static Component DeserializeInstance(ISerializationReader reader)
+        public static Component DeserializeInstance(SerializedInfo info)
         {
-            string typeString = reader.ReadString();
+            string typeString = info.ReadString("type");
             Type type = Type.GetType(typeString);
             Component component = Activator.CreateInstance(type) as Component;
-            component.Deserialize(reader);
+            component.Deserialize(info);
             return component;
         }
     }

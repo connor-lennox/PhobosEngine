@@ -7,14 +7,14 @@ namespace PhobosEngine
 {
     public class GameEntity : ISerializable
     {
-        private static int _nextId = 0;
+        private static uint _nextId = 0;
 
         public bool Active {get; set;} = true;
 
         public Transform Transform { get; private set; }
         private List<Component> components = new List<Component>();
 
-        public int Id { get; private set; }
+        public uint Id { get; private set; }
 
         public GameEntity()
         {
@@ -125,26 +125,29 @@ namespace PhobosEngine
             }
         }
 
-        public void Serialize(ISerializationWriter writer)
+        public SerializedInfo Serialize()
         {
-            writer.Write(Id);
-            Transform.Serialize(writer);
-            writer.Write(components.Count);
-            foreach(Component c in components)
+            SerializedInfo info = new SerializedInfo();
+            info.Write("id", Id);
+            info.Write("transform", Transform.Serialize());
+            SerializedInfo[] componentInfos = new SerializedInfo[components.Count];
+            for(int i = 0; i < components.Count; i++)
             {
-                c.Serialize(writer);
+                componentInfos[i] = components[i].Serialize();
             }
+            info.Write("components", componentInfos);
+            return info;
         }
 
-        public void Deserialize(ISerializationReader reader)
+        public void Deserialize(SerializedInfo info)
         {
-            Id = reader.ReadInt();
-            Transform.Deserialize(reader);
+            Id = info.ReadUInt("id");
+            Transform.Deserialize(info.ReadSerializedInfo("transform"));
             ClearComponents();
-            int numComponents = reader.ReadInt();
-            for(int i = 0; i < numComponents; i++)
+            SerializedInfo[] componentInfos = info.ReadSerializedInfoArray("components");
+            for(int i = 0; i < componentInfos.Length; i++)
             {
-                components.Add(Component.DeserializeInstance(reader));
+                components.Add(Component.DeserializeInstance(componentInfos[i]));
             }
         }
     }

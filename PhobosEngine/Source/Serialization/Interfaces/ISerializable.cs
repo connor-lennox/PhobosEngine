@@ -2,7 +2,7 @@ namespace PhobosEngine.Serialization
 {
     public interface ISerializable
     {
-        void Serialize(ISerializationWriter writer);
-        void Deserialize(ISerializationReader reader);
+        SerializedInfo Serialize();
+        void Deserialize(SerializedInfo info);
     }
 }

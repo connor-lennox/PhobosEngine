@@ -13,14 +13,16 @@ namespace PhobosEngine.Serialization
             return manager.Load<T>(pathToResource);
         }
 
-        public void Serialize(ISerializationWriter writer)
+        public SerializedInfo Serialize()
         {
-            writer.Write(pathToResource);
+            SerializedInfo info = new SerializedInfo();
+            info.Write("resourcePath", pathToResource);
+            return info;
         }
 
-        public void Deserialize(ISerializationReader reader)
+        public void Deserialize(SerializedInfo info)
         {
-            pathToResource = reader.ReadString();
+            pathToResource = info.ReadString("resourcePath");
         }
 
     }

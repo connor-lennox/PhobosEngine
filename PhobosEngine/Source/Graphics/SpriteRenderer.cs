@@ -24,18 +24,19 @@ namespace PhobosEngine
             batch.Draw(sprite, Transform.Position, null, tintColor, Transform.Rotation, EffectiveSpriteHalfBounds, Transform.Scale, SpriteEffects.None, 0);
         }
 
-        public override void Serialize(ISerializationWriter writer)
+        public override SerializedInfo Serialize()
         {
-            base.Serialize(writer);
+            SerializedInfo info = base.Serialize();
             // TODO: serialize reference to sprite
-            writer.Write(tintColor);
+            info.Write("tintColor", tintColor);
+            return info;
         }
 
-        public override void Deserialize(ISerializationReader reader)
+        public override void Deserialize(SerializedInfo info)
         {
-            base.Deserialize(reader);
+            base.Deserialize(info);
             // TODO: deserialize sprite reference
-            tintColor = reader.ReadColor();
+            tintColor = info.ReadColor("tintColor");
         }
     }
 }

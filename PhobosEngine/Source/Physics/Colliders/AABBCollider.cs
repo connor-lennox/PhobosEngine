@@ -65,16 +65,17 @@ namespace PhobosEngine
             throw new System.NotImplementedException($"Collisions of AABB to {other} are not supported.");
         }
 
-        public override void Serialize(ISerializationWriter writer)
+        public override SerializedInfo Serialize()
         {
-            base.Serialize(writer);
-            writer.Write(size);
+            SerializedInfo info = base.Serialize();
+            info.Write("size", size);
+            return info;
         }
 
-        public override void Deserialize(ISerializationReader reader)
+        public override void Deserialize(SerializedInfo info)
         {
-            base.Deserialize(reader);
-            Size = reader.ReadVector2();
+            base.Deserialize(info);
+            Size = info.ReadVector2("size");
         }
     }
 }

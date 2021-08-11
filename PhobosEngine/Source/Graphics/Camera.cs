@@ -42,21 +42,22 @@ namespace PhobosEngine
                     Matrix.CreateTranslation(new Vector3(Bounds.Width * 0.5f, Bounds.Height * 0.5f, 0));
         }
 
-        public override void Serialize(ISerializationWriter writer)
+        public override SerializedInfo Serialize()
         {
-            base.Serialize(writer);
-            writer.Write(Zoom);
-            writer.Write(Bounds.X);
-            writer.Write(Bounds.Y);
-            writer.Write(Bounds.Width);
-            writer.Write(Bounds.Height);
+            SerializedInfo info = base.Serialize();
+            info.Write("zoom", Zoom);
+            info.Write("boundsX", Bounds.X);
+            info.Write("boundsY", Bounds.Y);
+            info.Write("boundsWidth", Bounds.Width);
+            info.Write("boundsHeight", Bounds.Height);
+            return info;
         }
 
-        public override void Deserialize(ISerializationReader reader)
+        public override void Deserialize(SerializedInfo info)
         {
-            base.Deserialize(reader);
-            Zoom = reader.ReadFloat();
-            Bounds = new Rectangle(reader.ReadInt(), reader.ReadInt(), reader.ReadInt(), reader.ReadInt());
+            base.Deserialize(info);
+            Zoom = info.ReadFloat("zoom");
+            Bounds = new Rectangle(info.ReadInt("boundsX"), info.ReadInt("boundsY"), info.ReadInt("boundsWidth"), info.ReadInt("boundsHeight"));
             UpdateRenderMatrix();
         }
     }
