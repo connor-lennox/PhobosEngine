@@ -308,6 +308,11 @@ namespace PhobosEngine
             return Entity.GetComponents<T>();
         }
 
+        public bool TryGetComponent<T>(out T component) where T : Component
+        {
+            return Entity.TryGetComponent<T>(out component);
+        }
+
         public bool HasComponent<T>() where T : Component
         {
             return Entity.HasComponent<T>();

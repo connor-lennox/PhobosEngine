@@ -79,6 +79,12 @@ namespace PhobosEngine
             return comps.ToArray();
         }
 
+        public bool TryGetComponent<T>(out T component) where T : Component
+        {
+            component = GetComponent<T>();
+            return component != null;
+        }
+
         public bool RemoveComponent<T>() where T: Component
         {
             Component comp = GetComponent<T>();
@@ -131,6 +137,8 @@ namespace PhobosEngine
             writer.WriteNumber("id", Id);
             writer.WriteSerializable("transform", Transform);
             writer.WriteSerializableArray("components", components.ToArray());
+
+            // TODO: Serialize reference to parent (by ID? how to deserialize?)
         }
 
         public void Deserialize(JsonElement json)
