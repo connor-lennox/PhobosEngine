@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 
 namespace PhobosEngine.Input {
-    static class Input {
+    static class InputManager {
         private static KeyboardState keyboardState, lastKeyboardState;
         private static MouseState mouseState, lastMouseState;
 

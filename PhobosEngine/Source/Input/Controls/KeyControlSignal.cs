@@ -14,7 +14,7 @@ namespace PhobosEngine.Input
         public override float GetSignal()
         {
             // Key signal is "binary": just 1.0 for pressed and 0.0 for unpressed
-            return Input.GetKey(boundKey) ? 1.0f : 0.0f;
+            return InputManager.GetKey(boundKey) ? 1.0f : 0.0f;
         }
     }
 }
