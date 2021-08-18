@@ -39,8 +39,8 @@ namespace PhobosEngine
         private void UpdateRenderMatrix()
         {
             RenderMatrix = Matrix.CreateTranslation(new Vector3(-Transform.Position, 0)) * 
-                    Matrix.CreateTranslation(new Vector3(centeringOffset.X, centeringOffset.Y, 0)) *
-                    Matrix.CreateScale(Zoom);
+                    Matrix.CreateScale(Zoom) * 
+                    Matrix.CreateTranslation(new Vector3(centeringOffset.X, centeringOffset.Y, 0));
         }
 
         public override void Serialize(Utf8JsonWriter writer)
