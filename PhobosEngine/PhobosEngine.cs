@@ -4,35 +4,32 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using PhobosEngine.Input;
+
 namespace PhobosEngine
 {
-    public class PhobosEngine : Game
+    public class PhobosEngine : PhobosGame
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-
         private Scene testScene;
         private Transform testTransform;
+
+        private Camera testCamera;
 
         private Transform[] debugCorners;
         private BoxCollider boxToDebug;
 
-        public PhobosEngine()
+        public PhobosEngine() : base(320, 240)
         {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
             base.Initialize();
+            IsMouseVisible = true;
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
             Texture2D testPixelTexture = new Texture2D(GraphicsDevice, 20, 20);
             Texture2D smallPixelTexture = new Texture2D(GraphicsDevice, 4, 4);
             Color[] data = new Color[400];
@@ -80,8 +77,7 @@ namespace PhobosEngine
             c3.Register();
 
             GameEntity camEntity = new GameEntity();
-            camEntity.AddComponent(new Camera());
-            camEntity.GetComponent<Camera>().Bounds = GraphicsDevice.Viewport.Bounds;
+            testCamera = camEntity.AddComponent(new Camera());
             testScene.AddEntity(testEntity3);
             testScene.AddEntity(testEntity2);
             testScene.AddEntity(testEntity1);
@@ -110,10 +106,13 @@ namespace PhobosEngine
                 testScene.AddEntity(debugCorners[i].Entity);
             }
 
+            activeScene = testScene;
         }
 
         protected override void Update(GameTime gameTime)
         {
+            InputManager.Update();
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -131,15 +130,35 @@ namespace PhobosEngine
                 debugCorners[i].Position = boxToDebug.EffectivePoints[i];
             }
 
+            if(InputManager.GetKey(Keys.Up)) {
+                testCamera.Transform.Position += new Vector2(0, -0.1f);
+            }
+
+            if(InputManager.GetKey(Keys.Down)) {
+                testCamera.Transform.Position += new Vector2(0, 0.1f);
+            }
+
+            if(InputManager.GetKey(Keys.Left)) {
+                testCamera.Transform.Position += new Vector2(-0.1f, 0);
+            }
+
+            if(InputManager.GetKey(Keys.Right)) {
+                testCamera.Transform.Position += new Vector2(0.1f, 0);
+            }
+
+            if(InputManager.GetKeyDown(Keys.Q)) {
+                testCamera.Zoom -= .1f;
+            }
+
+            if(InputManager.GetKeyDown(Keys.E)) {
+                testCamera.Zoom += .1f;
+            }
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            testScene.Draw(_spriteBatch);
-
             base.Draw(gameTime);
         }
     }

@@ -14,12 +14,12 @@ namespace PhobosEngine
                 UpdateRenderMatrix();
             }
         }
-        
-        private Rectangle bounds = new Rectangle(0, 0, 640, 480);
-        public Rectangle Bounds {
-            get => bounds; 
+
+        private Vector2 centeringOffset = PhobosGame.GameResolution / 2;
+        public Vector2 CenteringOffset {
+            get => centeringOffset;
             set {
-                bounds = value;
+                centeringOffset = value;
                 UpdateRenderMatrix();
             }
         }
@@ -38,27 +38,23 @@ namespace PhobosEngine
 
         private void UpdateRenderMatrix()
         {
-            RenderMatrix = Matrix.CreateTranslation(new Vector3(-Transform.Position, 0)) *
-                    Matrix.CreateScale(Zoom) *
-                    Matrix.CreateTranslation(new Vector3(Bounds.Width * 0.5f, Bounds.Height * 0.5f, 0));
+            RenderMatrix = Matrix.CreateTranslation(new Vector3(-Transform.Position, 0)) * 
+                    Matrix.CreateTranslation(new Vector3(centeringOffset.X, centeringOffset.Y, 0)) *
+                    Matrix.CreateScale(Zoom);
         }
 
         public override void Serialize(Utf8JsonWriter writer)
         {
             base.Serialize(writer);
             writer.WriteNumber("zoom", Zoom);
-            writer.WriteNumber("boundsX", Bounds.X);
-            writer.WriteNumber("boundsY", Bounds.Y);
-            writer.WriteNumber("boundsWidth", Bounds.Width);
-            writer.WriteNumber("boundsHeight", Bounds.Height);
+            writer.WriteVector2("offset", CenteringOffset);
         }
 
         public override void Deserialize(JsonElement json)
         {
             base.Deserialize(json);
             Zoom = json.GetProperty("zoom").GetSingle();
-            Bounds = new Rectangle(json.GetProperty("boundsX").GetInt32(), json.GetProperty("boundsY").GetInt32(), 
-                                    json.GetProperty("boundsWidth").GetInt32(), json.GetProperty("boundsHeight").GetInt32());
+            CenteringOffset = json.GetProperty("offset").GetVector2();
             UpdateRenderMatrix();
         }
     }

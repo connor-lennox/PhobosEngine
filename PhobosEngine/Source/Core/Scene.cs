@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using PhobosEngine.Serialization;
+
 namespace PhobosEngine
 {
-    public class Scene
+    public class Scene : ISerializable
     {
         private List<GameEntity> entities = new List<GameEntity>();
         public Camera MainCamera {get; set;}
@@ -46,6 +49,28 @@ namespace PhobosEngine
             }
 
             batch.End();
+        }
+
+        public void Serialize(Utf8JsonWriter writer)
+        {
+            writer.WriteSerializableArray("entities", entities.ToArray());
+            if(MainCamera != null && entities.Contains(MainCamera.Entity)) {
+                writer.WriteNumber("camIndex", entities.IndexOf(MainCamera.Entity));
+            }
+        }
+
+        public void Deserialize(JsonElement json)
+        {
+            entities = new List<GameEntity>();
+            foreach(JsonElement elem in json.GetProperty("entities").EnumerateArray()) {
+                GameEntity newEnt = new GameEntity();
+                newEnt.Deserialize(elem);
+                entities.Add(newEnt);
+            }
+
+            if(json.TryGetInt32(out int camIndex)) {
+                MainCamera = entities[camIndex].GetComponent<Camera>();
+            }
         }
     }
 }
