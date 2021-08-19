@@ -4,11 +4,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using PhobosEngine;
 using PhobosEngine.Input;
 
-namespace PhobosEngine
+namespace PhobosExample
 {
-    public class PhobosEngine : PhobosGame
+    public class PhobosExample : PhobosGame
     {
         private Scene testScene;
         private Transform testTransform;
@@ -20,7 +21,7 @@ namespace PhobosEngine
 
         private SpriteFont testFont;
 
-        public PhobosEngine() : base(320, 240)
+        public PhobosExample() : base(320, 240)
         {
         }
 

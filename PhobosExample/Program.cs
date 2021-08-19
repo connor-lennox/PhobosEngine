@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace PhobosEngine
+namespace PhobosExample
 {
     public static class Program
     {
         [STAThread]
         static void Main()
         {
-            using (var game = new PhobosEngine())
+            using (var game = new PhobosExample())
                 game.Run();
         }
     }
