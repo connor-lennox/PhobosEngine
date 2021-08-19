@@ -18,6 +18,8 @@ namespace PhobosEngine
         private Transform[] debugCorners;
         private BoxCollider boxToDebug;
 
+        private SpriteFont testFont;
+
         public PhobosEngine() : base(320, 240)
         {
         }
@@ -26,10 +28,12 @@ namespace PhobosEngine
         {
             base.Initialize();
             IsMouseVisible = true;
+            Window.AllowUserResizing = true;
         }
 
         protected override void LoadContent()
         {
+            testFont = Content.Load<SpriteFont>("test_font");
             Texture2D testPixelTexture = new Texture2D(GraphicsDevice, 20, 20);
             Texture2D smallPixelTexture = new Texture2D(GraphicsDevice, 4, 4);
             Color[] data = new Color[400];
@@ -106,6 +110,15 @@ namespace PhobosEngine
                 testScene.AddEntity(debugCorners[i].Entity);
             }
 
+            GameEntity textTestEntity = new GameEntity();
+            TextRenderer tr = textTestEntity.AddComponent<TextRenderer>();
+            tr.Font = testFont;
+            tr.Text = "Test string.";
+            tr.TextColor = Color.DarkRed;
+            tr.Transform.Position = new Vector2(-40, 70);
+
+            testScene.AddEntity(textTestEntity);
+
             activeScene = testScene;
         }
 
@@ -146,12 +159,12 @@ namespace PhobosEngine
                 testCamera.Transform.Position += new Vector2(0.1f, 0);
             }
 
-            if(InputManager.GetKeyDown(Keys.Q)) {
-                testCamera.Zoom -= .1f;
+            if(InputManager.GetKey(Keys.Q)) {
+                testCamera.Zoom -= .01f;
             }
 
-            if(InputManager.GetKeyDown(Keys.E)) {
-                testCamera.Zoom += .1f;
+            if(InputManager.GetKey(Keys.E)) {
+                testCamera.Zoom += .01f;
             }
 
             base.Update(gameTime);
