@@ -37,9 +37,9 @@ namespace PhobosEngine
             
             foreach(GameEntity entity in entities)
             {
-                if(entity.Active && entity.HasComponent<SpriteRenderer>())
+                if(entity.Active && entity.HasComponent<Renderer>())
                 {
-                    foreach(SpriteRenderer renderer in entity.GetComponents<SpriteRenderer>())
+                    foreach(Renderer renderer in entity.GetComponents<Renderer>())
                     {
                         // Draw sprite - this will have to do for now
                         // Lighting will obviously make this more complicated

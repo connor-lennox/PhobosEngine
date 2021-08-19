@@ -5,7 +5,7 @@ using PhobosEngine.Serialization;
 
 namespace PhobosEngine
 {
-    public class SpriteRenderer : Component
+    public class SpriteRenderer : Renderer
     {
         public Texture2D sprite;
         public Color tintColor = Color.White;
@@ -20,7 +20,7 @@ namespace PhobosEngine
 
         // TODO: sprite sorting layers
 
-        public void Draw(SpriteBatch batch)
+        public override void Draw(SpriteBatch batch)
         {
             batch.Draw(sprite, Transform.Position, null, tintColor, Transform.Rotation, EffectiveSpriteHalfBounds, Transform.Scale, SpriteEffects.None, 0);
         }
