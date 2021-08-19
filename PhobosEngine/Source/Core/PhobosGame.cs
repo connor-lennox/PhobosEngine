@@ -42,6 +42,7 @@ namespace PhobosEngine
 
         protected override void Update(GameTime gameTime)
         {
+            Time.DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             activeScene?.Update();
             base.Update(gameTime);
         }
@@ -60,8 +61,6 @@ namespace PhobosEngine
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
             spriteBatch.Draw(renderTarget, GraphicsDevice.Viewport.Bounds, Color.White);
             spriteBatch.End();
-
-            // activeScene?.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }
