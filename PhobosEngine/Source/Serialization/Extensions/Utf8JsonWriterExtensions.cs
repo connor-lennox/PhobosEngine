@@ -51,5 +51,13 @@ namespace PhobosEngine.Serialization
         {
             self.WriteNumber(key, color.PackedValue);
         }
+
+        public static void WriteRectangle(this Utf8JsonWriter self, string key, Rectangle rectangle)
+        {
+            self.WriteNumber("x", rectangle.X);
+            self.WriteNumber("y", rectangle.Y);
+            self.WriteNumber("width",  rectangle.Width);
+            self.WriteNumber("height", rectangle.Height);
+        }
     }
 }

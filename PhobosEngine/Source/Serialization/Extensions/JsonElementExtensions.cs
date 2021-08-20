@@ -33,5 +33,17 @@ namespace PhobosEngine.Serialization
             }
             return new Color(packed);
         }
+
+        public static Rectangle GetRectangle(this JsonElement self)
+        {
+            int x, y, width, height;
+            if(!self.GetProperty("x").TryGetInt32(out x) || !self.GetProperty("y").TryGetInt32(out y) ||
+                    self.GetProperty("width").TryGetInt32(out width) || !self.GetProperty("height").TryGetInt32(out height))
+            {
+                throw new InvalidOperationException("malformed Rectangle serialization");
+            }
+
+            return new Rectangle(x, y, width, height);
+        }
     }
 }

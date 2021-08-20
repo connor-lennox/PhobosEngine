@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PhobosEngine.Serialization;
 
 namespace PhobosEngine
 {
@@ -8,7 +9,7 @@ namespace PhobosEngine
     {
         public SpriteFont Font {get; set;}
         public string Text {get; set;}
-        public Color TextColor {get; set;}
+        public Color TextColor {get; set;} = Color.White;
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -19,6 +20,27 @@ namespace PhobosEngine
         public override void Serialize(Utf8JsonWriter writer)
         {
             base.Serialize(writer);
+            // TODO: Write AssetReference for Font
+            writer.WriteString("text", Text);
+            writer.WriteColor("textColor", TextColor);
+        }
+
+        public override void Deserialize(JsonElement json)
+        {
+            base.Deserialize(json);
+            if(json.TryGetProperty("text", out JsonElement textProperty))
+            {
+                Text = textProperty.GetString();
+            } else {
+                Text = "";
+            }
+
+            if(json.TryGetProperty("textColor", out JsonElement colorProperty))
+            {
+                TextColor = colorProperty.GetColor();
+            } else {
+                TextColor = Color.White;
+            }
         }
     }
 }
