@@ -3,11 +3,13 @@ using System.Reflection;
 using System.Text.Json;
 using Microsoft.Xna.Framework.Content;
 
-namespace PhobosEngine.Serialization
+using PhobosEngine.Serialization;
+
+namespace PhobosEngine
 {
     public struct ResourceReference : ISerializable
     {
-        string resourcePath;
+        public string resourcePath;
 
         public void Serialize(Utf8JsonWriter writer)
         {
@@ -16,12 +18,7 @@ namespace PhobosEngine.Serialization
 
         public void Deserialize(JsonElement json)
         {
-            if(json.TryGetProperty("resourcePath", out JsonElement elem))
-            {
-                resourcePath = json.GetProperty("resourcePath").GetString();
-            } else {
-                resourcePath = "";
-            }
+            resourcePath = json.GetProperty("resourcePath").GetString();
         }
 
     }

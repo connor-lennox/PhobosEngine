@@ -34,6 +34,7 @@ namespace PhobosEngine
         protected override void Initialize()
         {
             base.Initialize();
+            ResourceDatabase.Init(GraphicsDevice);
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             renderTarget = new RenderTarget2D(GraphicsDevice, resolutionX, resolutionY,
