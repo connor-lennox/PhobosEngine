@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/PhobosEngine/bin/Debug/net5.0/PhobosEngine.dll",
+            "program": "${workspaceFolder}/PhobosExample/bin/Debug/net5.0/PhobosExample.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/PhobosEngine",
+            "cwd": "${workspaceFolder}/PhobosExample",
             "console": "internalConsole",
             "stopAtEntry": false
         },
