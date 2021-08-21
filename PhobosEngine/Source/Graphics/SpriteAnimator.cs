@@ -47,10 +47,34 @@ namespace PhobosEngine
             }
         }
 
+        public override void Serialize(Utf8JsonWriter writer)
+        {
+            base.Serialize(writer);
+
+            ResourceReference spriteRef = ResourceReference.FromTexture2D(spritesheet);
+            if(spriteRef.isValid)
+            {
+                writer.WriteSerializable("spritesheetRef", spriteRef);
+            }
+
+            writer.WriteSerializableArray("animationFrames", AnimationFrames.ToArray());
+        }
+
+        public override void Deserialize(JsonElement json)
+        {
+            base.Deserialize(json);
+
+            if(json.TryGetProperty("spritesheetRef", out JsonElement spriteElem))
+            {
+                spritesheet = ResourceDatabase.LoadTexture(spriteElem.GetSerializable<ResourceReference>());
+            }
+
+            AnimationFrames = new List<SpriteAnimationFrame>(json.GetProperty("animationFrames").GetSerializableArray<SpriteAnimationFrame>());
+        }
 
     }
 
-    public struct SpriteAnimationFrame : ISerializable
+    public class SpriteAnimationFrame : ISerializable
     {
         public float frameTime;
         public Rectangle sourceRectangle;

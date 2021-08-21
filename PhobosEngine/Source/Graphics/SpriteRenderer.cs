@@ -29,7 +29,13 @@ namespace PhobosEngine
         public override void Serialize(Utf8JsonWriter writer)
         {
             base.Serialize(writer);
-            // TODO: serialize reference to sprite
+            
+            ResourceReference spriteRef = ResourceReference.FromTexture2D(sprite);
+            if(spriteRef.isValid)
+            {
+                writer.WriteSerializable("spriteRef", spriteRef);
+            }
+
             if(sourceRect != null)
             {
                 writer.WriteRectangle("sourceRect", sourceRect);
@@ -40,7 +46,12 @@ namespace PhobosEngine
         public override void Deserialize(JsonElement json)
         {
             base.Deserialize(json);
-            // TODO: deserialize sprite reference
+            
+            if(json.TryGetProperty("spriteRef", out JsonElement spriteElem))
+            {
+                sprite = ResourceDatabase.LoadTexture(spriteElem.GetSerializable<ResourceReference>());
+            }
+
             if(json.TryGetProperty("sourceRect", out JsonElement rectElem))
             {
                 sourceRect = rectElem.GetRectangle();

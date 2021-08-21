@@ -6,6 +6,33 @@ namespace PhobosEngine.Serialization
 {
     public static class JsonElementExtensions
     {
+        // This won't work for *all* ISerializables (namely abstract ones will be issues)
+        // but it provides a quick way to get some (simple) serialized objects.
+        public static T GetSerializable<T>(this JsonElement self) where T : ISerializable, new()
+        {
+            T obj = new T();
+            obj.Deserialize(self);
+            return obj;
+        }
+
+        public static T[] GetSerializableArray<T>(this JsonElement self) where T : ISerializable, new()
+        {
+            if(self.ValueKind != JsonValueKind.Array)
+            {
+                throw new InvalidOperationException("malformed ISerializable Array");
+            }
+
+            T[] elems = new T[self.GetArrayLength()];
+            int i = 0;
+            foreach(var elem in self.EnumerateArray())
+            {
+                elems[i] = elem.GetSerializable<T>();
+                i++;
+            }
+
+            return elems;
+        }
+
         public static Vector2 GetVector2(this JsonElement self)
         {
             if(self.ValueKind != JsonValueKind.Array || self.GetArrayLength() != 2)

@@ -12,6 +12,9 @@ namespace PhobosEngine
         private static Dictionary<string, Texture2D> textureCache = new Dictionary<string, Texture2D>();
         private static Dictionary<string, SoundEffect> soundEffectCache = new Dictionary<string, SoundEffect>();
 
+        private static Dictionary<Texture2D, string> texturePaths = new Dictionary<Texture2D, string>();
+        private static Dictionary<SoundEffect, string> soundEffectPaths = new Dictionary<SoundEffect, string>();
+
         public static string ResourcesRoot = "/Resources";
 
         public static void Init(GraphicsDevice graphicsDevice)
@@ -24,7 +27,9 @@ namespace PhobosEngine
             string refPath = reference.resourcePath;
             if(!textureCache.ContainsKey(refPath))
             {
-                textureCache[refPath] = Texture2D.FromFile(graphicsDevice, Path.Combine(ResourcesRoot, refPath));
+                Texture2D result = Texture2D.FromFile(graphicsDevice, Path.Combine(ResourcesRoot, refPath));
+                textureCache[refPath] = result;
+                texturePaths[result] = refPath;
             }
 
             return textureCache[refPath];
@@ -35,10 +40,22 @@ namespace PhobosEngine
             string refPath = reference.resourcePath;
             if(!soundEffectCache.ContainsKey(refPath))
             {
-                soundEffectCache[refPath] = SoundEffect.FromFile(Path.Combine(ResourcesRoot, refPath));
+                SoundEffect result = SoundEffect.FromFile(Path.Combine(ResourcesRoot, refPath));
+                soundEffectCache[refPath] = result;
+                soundEffectPaths[result] = refPath;
             }
 
             return soundEffectCache[refPath];
+        }
+
+        public static bool TryGetTexturePath(Texture2D texture, out string path)
+        {
+            return texturePaths.TryGetValue(texture, out path);
+        }
+
+        public static bool TryGetSoundEffectPath(SoundEffect soundEffect, out string path)
+        {
+            return soundEffectPaths.TryGetValue(soundEffect, out path);
         }
 
         public static void ClearCaches()
