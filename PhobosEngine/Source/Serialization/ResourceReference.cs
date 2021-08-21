@@ -5,27 +5,22 @@ using Microsoft.Xna.Framework.Content;
 
 namespace PhobosEngine.Serialization
 {
-    public struct SerializedResourceReference : ISerializable
+    public struct ResourceReference : ISerializable
     {
-        string pathToResource;
-
-        public T Load<T>(ContentManager manager)
-        {
-            return manager.Load<T>(pathToResource);
-        }
+        string resourcePath;
 
         public void Serialize(Utf8JsonWriter writer)
         {
-            writer.WriteString("resourcePath", pathToResource);
+            writer.WriteString("resourcePath", resourcePath);
         }
 
         public void Deserialize(JsonElement json)
         {
             if(json.TryGetProperty("resourcePath", out JsonElement elem))
             {
-                pathToResource = json.GetProperty("resourcePath").GetString();
+                resourcePath = json.GetProperty("resourcePath").GetString();
             } else {
-                pathToResource = "";
+                resourcePath = "";
             }
         }
 
