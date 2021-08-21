@@ -34,13 +34,17 @@ namespace PhobosExample
 
         protected override void LoadContent()
         {
-            testFont = Content.Load<SpriteFont>("test_font");
+            // testFont = Content.Load<SpriteFont>("test_font");
             Texture2D testPixelTexture = new Texture2D(GraphicsDevice, 20, 20);
             Texture2D smallPixelTexture = new Texture2D(GraphicsDevice, 4, 4);
             Color[] data = new Color[400];
             for(int i = 0; i < 400; i++) {
                 data[i] = Color.White;
             }
+
+            Texture2D alienTexture = ResourceDatabase.LoadTexture("alien1.png");
+            Texture2D alien2Texture = ResourceDatabase.LoadTexture("alien2.png");
+
             testPixelTexture.SetData(data);
 
             Color[] data2 = new Color[16];
@@ -65,15 +69,15 @@ namespace PhobosExample
 
             GameEntity testEntity2 = new GameEntity();
             testEntity2.Transform.Position = new Vector2(-40, 0);
-            testEntity2.AddComponent(new SpriteRenderer()).sprite = testPixelTexture;
-            testEntity2.GetComponent<SpriteRenderer>().tintColor = Color.Black;
+            testEntity2.AddComponent(new SpriteRenderer()).sprite = alienTexture;
+            testEntity2.GetComponent<SpriteRenderer>().tintColor = Color.White;
             BoxCollider c2 = testEntity2.AddComponent<BoxCollider>();
             c2.Size = new Vector2(20, 20);
 
             GameEntity testEntity3 = new GameEntity();
             testEntity3.Transform.Position = new Vector2(30, -10);
-            testEntity3.AddComponent(new SpriteRenderer()).sprite = testPixelTexture;
-            testEntity3.GetComponent<SpriteRenderer>().tintColor = Color.Black;
+            testEntity3.AddComponent(new SpriteRenderer()).sprite = alien2Texture;
+            testEntity3.GetComponent<SpriteRenderer>().tintColor = Color.White;
             BoxCollider c3 = testEntity3.AddComponent<BoxCollider>();
             c3.Size = new Vector2(20, 20);
 
@@ -111,14 +115,14 @@ namespace PhobosExample
                 testScene.AddEntity(debugCorners[i].Entity);
             }
 
-            GameEntity textTestEntity = new GameEntity();
-            TextRenderer tr = textTestEntity.AddComponent<TextRenderer>();
-            tr.Font = testFont;
-            tr.Text = "Test string.";
-            tr.TextColor = Color.DarkRed;
-            tr.Transform.Position = new Vector2(-40, 70);
+            // GameEntity textTestEntity = new GameEntity();
+            // TextRenderer tr = textTestEntity.AddComponent<TextRenderer>();
+            // tr.Font = testFont;
+            // tr.Text = "Test string.";
+            // tr.TextColor = Color.DarkRed;
+            // tr.Transform.Position = new Vector2(-40, 70);
 
-            testScene.AddEntity(textTestEntity);
+            // testScene.AddEntity(textTestEntity);
 
             activeScene = testScene;
         }

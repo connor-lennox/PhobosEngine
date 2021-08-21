@@ -28,17 +28,15 @@ namespace PhobosEngine
             GameResolution = new Vector2(resolutionX, resolutionY);
 
             graphicsManager = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
-            base.Initialize();
             ResourceDatabase.Init(GraphicsDevice);
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             renderTarget = new RenderTarget2D(GraphicsDevice, resolutionX, resolutionY,
                                                 false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
+            base.Initialize();
         }
 
         protected override void Update(GameTime gameTime)

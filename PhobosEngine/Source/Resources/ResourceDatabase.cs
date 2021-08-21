@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
@@ -15,37 +16,46 @@ namespace PhobosEngine
         private static Dictionary<Texture2D, string> texturePaths = new Dictionary<Texture2D, string>();
         private static Dictionary<SoundEffect, string> soundEffectPaths = new Dictionary<SoundEffect, string>();
 
-        public static string ResourcesRoot = "/Resources";
+        public static string ResourcesRoot = "Resources";
+        private static string ResourcesPath => Path.Combine(Environment.CurrentDirectory, ResourcesRoot);
 
-        public static void Init(GraphicsDevice graphicsDevice)
+        public static void Init(GraphicsDevice device)
         {
-            ResourceDatabase.graphicsDevice = graphicsDevice;
+            graphicsDevice = device;
+        }
+
+        public static Texture2D LoadTexture(string path)
+        {
+            if(!textureCache.ContainsKey(path))
+            {
+                Texture2D result = Texture2D.FromFile(graphicsDevice, Path.Combine(ResourcesPath, path));
+                textureCache[path] = result;
+                texturePaths[result] = path;
+            }
+
+            return textureCache[path];
         }
 
         public static Texture2D LoadTexture(ResourceReference reference)
         {
-            string refPath = reference.resourcePath;
-            if(!textureCache.ContainsKey(refPath))
+            return LoadTexture(reference.resourcePath);
+        }
+
+        public static SoundEffect LoadSoundEffect(string path)
+        {
+            if(!soundEffectCache.ContainsKey(path))
             {
-                Texture2D result = Texture2D.FromFile(graphicsDevice, Path.Combine(ResourcesRoot, refPath));
-                textureCache[refPath] = result;
-                texturePaths[result] = refPath;
+                SoundEffect result = SoundEffect.FromFile(Path.Combine(ResourcesPath, path));
+                soundEffectCache[path] = result;
+                soundEffectPaths[result] = path;
             }
 
-            return textureCache[refPath];
+            return soundEffectCache[path];
         }
 
         public static SoundEffect LoadSoundEffect(ResourceReference reference)
         {
-            string refPath = reference.resourcePath;
-            if(!soundEffectCache.ContainsKey(refPath))
-            {
-                SoundEffect result = SoundEffect.FromFile(Path.Combine(ResourcesRoot, refPath));
-                soundEffectCache[refPath] = result;
-                soundEffectPaths[result] = refPath;
-            }
-
-            return soundEffectCache[refPath];
+            return LoadSoundEffect(reference.resourcePath);
         }
 
         public static bool TryGetTexturePath(Texture2D texture, out string path)

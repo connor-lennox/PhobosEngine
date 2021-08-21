@@ -33,7 +33,7 @@ namespace PhobosEngine
         public void Draw(SpriteBatch batch)
         {
             Matrix cameraMatrix = MainCamera.RenderMatrix;
-            batch.Begin(transformMatrix: cameraMatrix);
+            batch.Begin(transformMatrix: cameraMatrix, samplerState: SamplerState.PointClamp);
             
             foreach(GameEntity entity in entities)
             {

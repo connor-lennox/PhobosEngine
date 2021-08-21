@@ -8,7 +8,7 @@ namespace PhobosEngine
     public class SpriteRenderer : Renderer
     {
         public Texture2D sprite;
-        public Rectangle sourceRect;
+        public Rectangle? sourceRect = null;
         public Color tintColor = Color.White;
 
         private Vector2 EffectiveSpriteSize { get {
@@ -36,9 +36,9 @@ namespace PhobosEngine
                 writer.WriteSerializable("spriteRef", spriteRef);
             }
 
-            if(sourceRect != null)
+            if(sourceRect.HasValue)
             {
-                writer.WriteRectangle("sourceRect", sourceRect);
+                writer.WriteRectangle("sourceRect", sourceRect.Value);
             }
             writer.WriteColor("tintColor", tintColor);
         }
