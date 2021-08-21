@@ -8,6 +8,7 @@ namespace PhobosEngine
     public class SpriteRenderer : Renderer
     {
         public Texture2D sprite;
+        public Rectangle sourceRect;
         public Color tintColor = Color.White;
 
         private Vector2 EffectiveSpriteSize { get {
@@ -22,13 +23,17 @@ namespace PhobosEngine
 
         public override void Draw(SpriteBatch batch)
         {
-            batch.Draw(sprite, Transform.Position, null, tintColor, Transform.Rotation, EffectiveSpriteHalfBounds, Transform.Scale, SpriteEffects.None, 0);
+            batch.Draw(sprite, Transform.Position, sourceRect, tintColor, Transform.Rotation, EffectiveSpriteHalfBounds, Transform.Scale, SpriteEffects.None, 0);
         }
 
         public override void Serialize(Utf8JsonWriter writer)
         {
             base.Serialize(writer);
             // TODO: serialize reference to sprite
+            if(sourceRect != null)
+            {
+                writer.WriteRectangle("sourceRect", sourceRect);
+            }
             writer.WriteColor("tintColor", tintColor);
         }
 
@@ -36,6 +41,10 @@ namespace PhobosEngine
         {
             base.Deserialize(json);
             // TODO: deserialize sprite reference
+            if(json.TryGetProperty("sourceRect", out JsonElement rectElem))
+            {
+                sourceRect = rectElem.GetRectangle();
+            }
             tintColor = json.GetProperty("tintColor").GetColor();
         }
     }
