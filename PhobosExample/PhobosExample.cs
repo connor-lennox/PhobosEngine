@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using FontStashSharp;
+
 using PhobosEngine;
 using PhobosEngine.Input;
 
@@ -19,7 +21,7 @@ namespace PhobosExample
         private Transform[] debugCorners;
         private BoxCollider boxToDebug;
 
-        private SpriteFont testFont;
+        private FontSystem testFont;
 
         public PhobosExample() : base(320, 240)
         {
@@ -34,7 +36,6 @@ namespace PhobosExample
 
         protected override void LoadContent()
         {
-            // testFont = Content.Load<SpriteFont>("test_font");
             Texture2D testPixelTexture = new Texture2D(GraphicsDevice, 20, 20);
             Texture2D smallPixelTexture = new Texture2D(GraphicsDevice, 4, 4);
             Color[] data = new Color[400];
@@ -115,14 +116,17 @@ namespace PhobosExample
                 testScene.AddEntity(debugCorners[i].Entity);
             }
 
-            // GameEntity textTestEntity = new GameEntity();
-            // TextRenderer tr = textTestEntity.AddComponent<TextRenderer>();
-            // tr.Font = testFont;
-            // tr.Text = "Test string.";
-            // tr.TextColor = Color.DarkRed;
-            // tr.Transform.Position = new Vector2(-40, 70);
 
-            // testScene.AddEntity(textTestEntity);
+            testFont = ResourceDatabase.LoadFontSystem("pixellocale-v-1-4.ttf");
+            GameEntity textTestEntity = new GameEntity();
+            TextRenderer tr = textTestEntity.AddComponent<TextRenderer>();
+            tr.FontSystem = testFont;
+            tr.FontSize = 40;
+            tr.Text = "Test string.";
+            tr.TextColor = Color.DarkRed;
+            tr.Transform.Position = new Vector2(-40, 70);
+
+            testScene.AddEntity(textTestEntity);
 
             activeScene = testScene;
         }
