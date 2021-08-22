@@ -127,7 +127,7 @@ namespace PhobosExample
             tr.Transform.Position = new Vector2(-40, 70);
 
             testScene.AddEntity(textTestEntity);
-
+            testScene.BackgroundColor = Color.DarkSlateBlue;
             activeScene = testScene;
         }
 

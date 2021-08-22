@@ -12,6 +12,8 @@ namespace PhobosEngine
         private List<GameEntity> entities = new List<GameEntity>();
         public Camera MainCamera {get; set;}
 
+        public Color BackgroundColor {get; set;} = Color.CornflowerBlue;
+
         public void AddEntity(GameEntity entity)
         {
             entities.Add(entity);

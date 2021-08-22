@@ -52,14 +52,17 @@ namespace PhobosEngine
 
             GraphicsDevice.SetRenderTarget(renderTarget);
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            activeScene?.Draw(spriteBatch);
+            if(activeScene != null)
+            {
+                GraphicsDevice.Clear(activeScene.BackgroundColor);
+                activeScene.Draw(spriteBatch);
 
-            GraphicsDevice.SetRenderTarget(null);
+                GraphicsDevice.SetRenderTarget(null);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
-            spriteBatch.Draw(renderTarget, GraphicsDevice.Viewport.Bounds, Color.White);
-            spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+                spriteBatch.Draw(renderTarget, GraphicsDevice.Viewport.Bounds, Color.White);
+                spriteBatch.End();
+            }
 
             base.Draw(gameTime);
         }
