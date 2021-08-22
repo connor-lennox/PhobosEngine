@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
+using FontStashSharp;
 
 using PhobosEngine.Serialization;
 
@@ -31,6 +32,17 @@ namespace PhobosEngine
         {
             string path;
             if(ResourceDatabase.TryGetSoundEffectPath(soundEffect, out path))
+            {
+                return new ResourceReference(path);
+            } else {
+                return invalidReference;
+            }
+        }
+
+        public static ResourceReference FromFontSystem(FontSystem fontSystem)
+        {
+            string path;
+            if(ResourceDatabase.TryGetFontSystemPath(fontSystem, out path))
             {
                 return new ResourceReference(path);
             } else {

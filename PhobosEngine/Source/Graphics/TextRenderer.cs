@@ -1,26 +1,62 @@
 using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using FontStashSharp;
 using PhobosEngine.Serialization;
 
 namespace PhobosEngine
 {
     public class TextRenderer : Renderer
     {
-        public SpriteFont Font {get; set;}
+        private FontSystem fontSystem;
+        public FontSystem FontSystem {
+            get => fontSystem; 
+            set {
+                fontSystem = value;
+                GenerateFont();
+            }
+        }
+        private int fontSize = 12;
+        public int FontSize {
+            get => fontSize; 
+            set {
+                fontSize = value;
+                GenerateFont();
+            }
+        }
+
+        private SpriteFontBase font;
+
         public string Text {get; set;}
         public Color TextColor {get; set;} = Color.White;
 
+        private void GenerateFont()
+        {
+            if(fontSystem != null)
+            {
+                font = fontSystem.GetFont(fontSize);
+            }
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(Font, Text, Transform.Position, TextColor, Transform.Rotation, 
-                                        Transform.Position, Transform.Scale, SpriteEffects.None, 0);
+            if(font != null)
+            {
+                spriteBatch.DrawString(font, Text, Transform.Position, TextColor, Transform.Scale, Transform.Rotation, Transform.Position, 0);
+            }
         }
 
         public override void Serialize(Utf8JsonWriter writer)
         {
             base.Serialize(writer);
-            // TODO: Write AssetReference for Font
+            
+            ResourceReference fontRef = ResourceReference.FromFontSystem(fontSystem);
+            if(fontRef.isValid)
+            {
+                writer.WriteSerializable("fontRef", fontRef);
+            }
+
+            writer.WriteNumber("fontSize", FontSize);
             writer.WriteString("text", Text);
             writer.WriteColor("textColor", TextColor);
         }
@@ -28,6 +64,16 @@ namespace PhobosEngine
         public override void Deserialize(JsonElement json)
         {
             base.Deserialize(json);
+            if(json.TryGetProperty("spriteRef", out JsonElement fontElem))
+            {
+                fontSystem = ResourceDatabase.LoadFontSystem(fontElem.GetSerializable<ResourceReference>());
+            }
+
+            if(json.TryGetProperty("fontSize", out JsonElement fontSizeElem))
+            {
+                fontSize = fontSizeElem.GetInt32();
+            }
+
             if(json.TryGetProperty("text", out JsonElement textProperty))
             {
                 Text = textProperty.GetString();
@@ -41,6 +87,8 @@ namespace PhobosEngine
             } else {
                 TextColor = Color.White;
             }
+
+            GenerateFont();
         }
     }
 }
