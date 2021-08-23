@@ -50,10 +50,10 @@ namespace PhobosEngine
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            GraphicsDevice.SetRenderTarget(renderTarget);
-
             if(activeScene != null)
             {
+                GraphicsDevice.SetRenderTarget(renderTarget);
+
                 GraphicsDevice.Clear(activeScene.BackgroundColor);
                 activeScene.Draw(spriteBatch);
 
