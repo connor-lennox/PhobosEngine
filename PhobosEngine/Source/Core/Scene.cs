@@ -26,9 +26,9 @@ namespace PhobosEngine
 
         public void Update()
         {
-            foreach(GameEntity entity in entities)
+            for(int i = 0; i < entities.Count; i++)
             {
-                if(entity.Active) entity.Update();
+                if(entities[i].Active) entities[i].Update();
             }
         }
 
