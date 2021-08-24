@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using PhobosEngine.Input;
+
 namespace PhobosEngine
 {
     public class PhobosGame : Game
@@ -8,7 +10,7 @@ namespace PhobosEngine
         // TODO: should this *really* be static?
         public static Vector2 GameResolution {get; private set;}
 
-        private GraphicsDeviceManager graphicsManager;
+        protected GraphicsDeviceManager graphicsManager;
         private SpriteBatch spriteBatch;
 
         protected Scene activeScene = null;
@@ -41,6 +43,7 @@ namespace PhobosEngine
 
         protected override void Update(GameTime gameTime)
         {
+            InputManager.Update();
             Time.DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             activeScene?.Update();
             base.Update(gameTime);
