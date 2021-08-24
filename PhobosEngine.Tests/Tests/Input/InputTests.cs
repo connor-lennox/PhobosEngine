@@ -70,7 +70,7 @@ namespace PhobosEngine.Tests.Input
             bool eventThrown = false;
             float axisState = 0;
 
-            AxisControl testAxisControl = new AxisControl(signal);
+            AxisControl testAxisControl = new AxisControl(signal, null);
             testAxisControl.OnModified += (float state) => {
                 eventThrown = true;
                 axisState = state;
@@ -111,7 +111,7 @@ namespace PhobosEngine.Tests.Input
             bool eventThrown = false;
             Vector2 axisState = Vector2.Zero;
 
-            TwoAxisControl testTwoAxisControl = new TwoAxisControl(signal, signal);
+            TwoAxisControl testTwoAxisControl = new TwoAxisControl(signal, null, signal, null);
             testTwoAxisControl.OnModified += (Vector2 state) => {
                 eventThrown = true;
                 axisState = state;

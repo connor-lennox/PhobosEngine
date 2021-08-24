@@ -6,7 +6,7 @@ namespace PhobosEngine.Input
     // Only controls that are added to the List are updated/send events!
     public abstract class ControlScheme
     {
-        protected List<Control> Controls {get; private set;}
+        protected List<Control> Controls {get; private set;} = new List<Control>();
         public void Update()
         {
             foreach(Control control in Controls)
