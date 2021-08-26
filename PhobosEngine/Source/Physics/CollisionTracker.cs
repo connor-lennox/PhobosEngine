@@ -50,7 +50,7 @@ namespace PhobosEngine
             {
                 if(!prevCollisions.ContainsKey(collision.Key))
                 {
-                    OnCollisionEnter.Invoke(collision.Value);
+                    OnCollisionEnter?.Invoke(collision.Value);
                 }
             }
 
@@ -59,7 +59,7 @@ namespace PhobosEngine
             {
                 if(!newCollisions.ContainsKey(oldCollision.Key))
                 {
-                    OnCollisionExit.Invoke(oldCollision.Value);
+                    OnCollisionExit?.Invoke(oldCollision.Value);
                 }
             }
 
