@@ -14,7 +14,7 @@ PhobosEngine has all of the features you would need to make (simple) 2d games:
 - Transform hierarchies allowing for complex scene objects
 - A custom physics implementation, based on an efficient Spatial Hash and 2d Collider system
 - Image, Font, and Sound loading
-- Text Rendering via (FontStashSharp)[https://github.com/rds1983/FontStashSharp]
+- Text Rendering via [FontStashSharp](https://github.com/rds1983/FontStashSharp)
 - An event-based Input system with optional polling support
 - Object-level serialization into JSON format
 
